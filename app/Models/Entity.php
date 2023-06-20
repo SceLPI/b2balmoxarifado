@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Entity extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
-    protected $table = "entities";
+	protected $table = "entities";
+
+	public function types()
+	{
+		return $this->belongsTo(Type::class, "id", "type_id"); 
+	}
 }

@@ -7,5 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    use HasFactory;
+	use HasFactory;
+
+	protected $table = "orders";
+
+	public function entities()
+	{
+		return $this->belongsTo(Entity::class, "id", "entity_id"); 
+	}
 }

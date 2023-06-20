@@ -19,6 +19,8 @@ return new class extends Migration
             $table->boolean('finished')->default(false);
 
             $table->timestamps();
+
+            $table->foreign('entity_id')->references('id')->on('entities');
         });
     }
 

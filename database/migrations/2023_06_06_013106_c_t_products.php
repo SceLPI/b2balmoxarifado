@@ -22,6 +22,9 @@ return new class extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 
