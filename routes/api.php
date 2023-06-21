@@ -1,15 +1,15 @@
 <?php
 
-use App\Http\Controllers\Backend\CategoryController;
-use App\Http\Controllers\Backend\Entity\BuildController;
-use App\Http\Controllers\Backend\Entity\CityHallController;
-use App\Http\Controllers\Backend\Entity\SecretaryController;
-use App\Http\Controllers\Backend\Entity\WarehouseController;
-use App\Http\Controllers\Backend\EntityController;
-use App\Http\Controllers\Backend\ManufacturerController;
-use App\Http\Controllers\Backend\OrderController;
-use App\Http\Controllers\Backend\ProductController;
-use App\Http\Controllers\Backend\TypeController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\Entity\BuildController;
+use App\Http\Controllers\Api\Entity\CityHallController;
+use App\Http\Controllers\Api\Entity\SecretaryController;
+use App\Http\Controllers\Api\Entity\WarehouseController;
+use App\Http\Controllers\Api\EntityController;
+use App\Http\Controllers\Api\ManufacturerController;
+use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\TypeController;
 use Illuminate\Support\Facades\Route;
 
 /*

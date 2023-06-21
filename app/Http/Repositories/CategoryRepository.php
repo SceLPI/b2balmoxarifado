@@ -11,9 +11,9 @@ class CategoryRepository extends Repository
 		}
 
 		public function saveFromRequest() : Category {
-			if ( $name = request()->get('name') ) {
-				$this->model->name = $name;
-			} else if ( !$this->model->name ) {
+			if ( request()->get('name') !== null ) {
+				$this->model->name = request()->get('name');
+			} else if ( !isset($this->model->name) ) {
 				abort(400, "name cannot be null.");
 			}
 			if ( $created_at = request()->get('created_at') ) {
@@ -22,6 +22,7 @@ class CategoryRepository extends Repository
 			if ( $updated_at = request()->get('updated_at') ) {
 				$this->model->updated_at = $updated_at;
 			}
+			$this->model->save();
 			return $this->model;
 		}
 

@@ -55,7 +55,7 @@ class ScaffoldGenerator extends Command
             mkdir( $repositoryFolder );
         }
 
-        if ( !file_exists($repositoryPath) || $this->option('overwritecontroller') == true ) {
+        if ( !file_exists($repositoryPath) || $this->option('overwriterepository') == true ) {
 
             $file = fopen( $repositoryPath, "w+");
 
@@ -74,9 +74,9 @@ class ScaffoldGenerator extends Command
                 }
                 if ( $column->getDefault() || $column->getNotnull() ) {
                     $columnName = $column->getName();
-                    $content .= "\t\t\tif ( \$" . $columnName . " = request()->get('" . $columnName . "') ) {\n";
-                    $content .= "\t\t\t\t\$this->model->" . $columnName . " = \$" . $columnName . ";\n";
-                    $content .= "\t\t\t} else if ( !\$this->model->" . $columnName . " ) {\n";
+                    $content .= "\t\t\tif ( request()->get('" . $columnName . "') !== null ) {\n";
+                    $content .= "\t\t\t\t\$this->model->" . $columnName . " = request()->get('" . $columnName . "');\n";
+                    $content .= "\t\t\t} else if ( !isset(\$this->model->" . $columnName . ") ) {\n";
                     $content .= "\t\t\t\tabort(400, \"" . $columnName . " cannot be null.\");\n";
                     $content .= "\t\t\t}\n";
                 } else if ( !$column->getDefault() || !$column->getNotnull() ) {
@@ -86,14 +86,21 @@ class ScaffoldGenerator extends Command
                     $content .= "\t\t\t}\n";
                 }
             }
+            $content .= "\t\t\t\$this->model->save();\n";
             $content .= "\t\t\treturn \$this->model;\n";
             $content .= "\t\t}\n\n";
             $content .= "}\n";
 
             fwrite($file, $content);
+            fclose($file);
 
+
+            $this->info("Repository " . $repositoryPath . " created.\n");
+
+        } else if (file_exists($repositoryPath)) {
+            $this->info("Repository " . $repositoryPath . " already exists, SKIPPING!\n" .
+                            "If you want to regenerate it use option --overwriterepository=true\n");
         }
-        dd( $repositoryPath );
     }
 
     private function checkController(Table $details) {
@@ -111,15 +118,22 @@ class ScaffoldGenerator extends Command
 
         $controllerName .= "Controller";
 
-        $controllerPath = base_path() . DIRECTORY_SEPARATOR ."app" . DIRECTORY_SEPARATOR ."Http" .
-                                DIRECTORY_SEPARATOR . "Controllers" .
-                                DIRECTORY_SEPARATOR . $controllerName . ".php";
+        $controllerFolder = base_path() . DIRECTORY_SEPARATOR ."app" . DIRECTORY_SEPARATOR ."Http" .
+                                    DIRECTORY_SEPARATOR . "Controllers" .
+                                    DIRECTORY_SEPARATOR . "Api" . DIRECTORY_SEPARATOR;
+
+        $controllerPath = $controllerFolder . $controllerName . ".php";
 
         if ( !file_exists( $controllerPath ) || $this->option('overwritecontroller') == true ) {
+
+            if ( !file_exists($controllerFolder)) {
+                mkdir( $controllerFolder );
+            }
+
             $file = fopen(  $controllerPath, "w+" );
 
             $content = "<?php\n\n";
-            $content .= "namespace App\Http\Controllers\Backend;\n\n";
+            $content .= "namespace App\Http\Controllers\Api;\n\n";
             $content .= "use App\Http\Controllers\Controller;\n";
             $content .= "use App\Http\Repositories\\" . $baseName . "Repository;\n\n";
             $content .= "class " . $controllerName . " extends Controller\n";
@@ -129,13 +143,70 @@ class ScaffoldGenerator extends Command
             $content .= "\t\t}\n\n";
             $content .= "}";
 
+            $this->info("Controller " . $controllerPath . " created. \n");
+
             fwrite($file, $content );
+            fclose($file);
 
         } else {
-            dd( "Controller already exists" );
+            $this->info("Controller " . $controllerPath . " already exists, SKIPPING!\n" .
+                            "If you want to regenerate it use option --overwritecontroller=true\n");
         }
 
-        dd( $controllerName);
+        $this->checkWebController($details);
+    }
+
+    private function checkWebController(Table $details) {
+
+
+        $controllerName = $this->option('controllername');
+
+        if ( !$controllerName ) {
+            $controllerName =  Str::singular($details->getName());
+            $controllerName = $this->snakeToCamelCase( $controllerName );
+        }
+
+        $baseName = $controllerName;
+        $wordfyName = 
+
+        dd( $this->camelToSnakeCase($baseName) );
+
+        $this->checkRepository($details, $baseName);
+
+        $controllerName .= "Controller";
+
+        $controllerFolder = base_path() . DIRECTORY_SEPARATOR ."app" . DIRECTORY_SEPARATOR ."Http" .
+                                    DIRECTORY_SEPARATOR . "Controllers" .
+                                    DIRECTORY_SEPARATOR;
+
+        $controllerPath = $controllerFolder . $controllerName . ".php";
+
+        if ( !file_exists( $controllerPath ) || $this->option('overwritecontroller') == true ) {
+            $file = fopen(  $controllerPath, "w+" );
+
+            //     $types = parent::_fetch();
+            //     return view('types.index')
+            //         ->with('types', $types);
+
+            $content = "<?php\n\n";
+            $content .= "namespace App\Http\Controllers;\n\n";
+            $content .= "use App\Http\Controllers\Api\\" . $controllerName . " as Api" . $controllerName . ";\n";
+            $content .= "class " . $controllerName . " extends Api" . $controllerName . "\n";
+            $content .= "{\n\n";
+            $content .= "\tpublic function index() {\n";
+            $content .= "\t\t\$" . $ . "\n";
+            $content .= "\t}\n\n";
+            $content .= "}";
+
+            $this->info("Controller " . $controllerPath . " created. \n");
+
+            fwrite($file, $content );
+            fclose($file);
+        } else {
+
+        }
+
+        dd("aaa");
 
     }
 
@@ -148,16 +219,15 @@ class ScaffoldGenerator extends Command
             $modelName = $this->snakeToCamelCase( $modelName );
         }
 
+        $modelPath = base_path() . DIRECTORY_SEPARATOR ."app" .
+        DIRECTORY_SEPARATOR ."Models" . DIRECTORY_SEPARATOR .
+        $modelName . ".php";
+
         if ( !file_exists(base_path() . DIRECTORY_SEPARATOR ."app" . DIRECTORY_SEPARATOR ."Models" . DIRECTORY_SEPARATOR . $modelName . ".php" )
                 || $this->option('overwritemodel') == true ) {
 
-            echo "Model " . base_path() . DIRECTORY_SEPARATOR ."app" .
-                  DIRECTORY_SEPARATOR ."Models" . DIRECTORY_SEPARATOR .
-                  $modelName . ".php created.";
 
-            $file = fopen(  base_path() . DIRECTORY_SEPARATOR ."app" .
-            DIRECTORY_SEPARATOR ."Models" . DIRECTORY_SEPARATOR .
-            $modelName . ".php", "w+" );
+            $file = fopen(  $modelPath, "w+" );
 
             $content = "<?php\n\n";
             $content .= "namespace App\Models;\n\n";
@@ -196,12 +266,18 @@ class ScaffoldGenerator extends Command
             $content .= "}\n";
 
             fwrite( $file, $content);
+            fclose($file);
+
+
+            $this->info("Model " . $modelPath . " created.\n");
 
         } else {
-            echo "The model " . base_path() . DIRECTORY_SEPARATOR ."app" .
-                  DIRECTORY_SEPARATOR ."Models" . DIRECTORY_SEPARATOR .
-                  $modelName . ".php already exists.";
+
+            $this->info("Model " . $modelPath . " already exists, SKIPPING!\n" .
+            "If you want to regenerate it use option --overwritemodel=true\n");
         }
+
+
     }
 
 
@@ -210,6 +286,15 @@ class ScaffoldGenerator extends Command
         $name = ucwords($name);
         $name = str_replace(" ", "", $name);
         return $name;
+    }
+
+    private function camelToSnakeCase(string $nome) : string {
+        $from = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
+                    "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+        $to = ["_a", "_b", "_c", "_d", "_e", "_f", "_g", "_h", "_i", "_j", "_k",
+                    "_l", "_m", "_n", "_o", "_p", "_q", "_r", "_s", "_t", "_u",
+                    "_v", "_w", "_x", "_y", "_z"];
+        return str_replace($from, $to, lcfirst($nome));
     }
 
     private function createViews(Table $details) {

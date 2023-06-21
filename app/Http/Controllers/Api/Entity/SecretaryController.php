@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Backend\Entity;
+namespace App\Http\Controllers\Entity;
 
-use App\Http\Controllers\Backend\EntityController;
+use App\Http\Controllers\Api\EntityController;
 use App\Http\Repositories\Entity\SecretaryRepository;
 use Illuminate\Http\Request;
 
