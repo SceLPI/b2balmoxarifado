@@ -14,6 +14,13 @@ abstract class Repository
     public function fetchAll() : Collection {
         return $this->model->get();
     }
+    public function find($id) : Model {
+        return $this->model->find($id);
+    }
+
+    public function create() : Model {
+        return $this->model;
+    }
 
     abstract function saveFromRequest() : Model;
 

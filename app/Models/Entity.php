@@ -11,8 +11,12 @@ class Entity extends Model
 
 	protected $table = "entities";
 
-	public function types()
+	public function getTypesAttribute()
 	{
-		return $this->belongsTo(Type::class, "id", "type_id"); 
+		return Type::all(); 
+	}
+	public function type()
+	{
+		return $this->belongsTo(Type::class, "type_id", "id"); 
 	}
 }

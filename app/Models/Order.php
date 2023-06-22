@@ -11,8 +11,16 @@ class Order extends Model
 
 	protected $table = "orders";
 
-	public function entities()
+	protected $casts = [
+		"created_at" => "datetime",
+		"updated_at" => "datetime",
+	];
+	public function getEntitiesAttribute()
 	{
-		return $this->belongsTo(Entity::class, "id", "entity_id"); 
+		return Entity::all(); 
+	}
+	public function entity()
+	{
+		return $this->belongsTo(Entity::class, "entity_id", "id"); 
 	}
 }

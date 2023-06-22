@@ -1,57 +1,48 @@
 @extends('layout.template')
 @section('content')
 
-<form method='post'>
-@csrf_field
-<div class='row'>
-	<div class='col-12'>
-		<div class='mb-3'>
-			<label for='id' class='form-label'>id</label>
-			<input class='form-control' id='id' name='id' value='{{ $model->id }}'>
-		<div>
-	</div>
-	<div class='col-12'>
-		<div class='mb-3'>
-			<label for='name' class='form-label'>name</label>
-			<input class='form-control' id='name' name='name' value='{{ $model->name }}'>
-		<div>
-	</div>
-	<div class='col-12'>
-		<div class='mb-3'>
-			<label for='email' class='form-label'>email</label>
-			<input class='form-control' id='email' name='email' value='{{ $model->email }}'>
-		<div>
-	</div>
-	<div class='col-12'>
-		<div class='mb-3'>
-			<label for='email_verified_at' class='form-label'>email_verified_at</label>
-			<input class='form-control' id='email_verified_at' name='email_verified_at' value='{{ $model->email_verified_at }}'>
-		<div>
-	</div>
-	<div class='col-12'>
-		<div class='mb-3'>
-			<label for='password' class='form-label'>password</label>
-			<input class='form-control' id='password' name='password' value='{{ $model->password }}'>
-		<div>
-	</div>
-	<div class='col-12'>
-		<div class='mb-3'>
-			<label for='remember_token' class='form-label'>remember_token</label>
-			<input class='form-control' id='remember_token' name='remember_token' value='{{ $model->remember_token }}'>
-		<div>
-	</div>
-	<div class='col-12'>
-		<div class='mb-3'>
-			<label for='created_at' class='form-label'>created_at</label>
-			<input class='form-control' id='created_at' name='created_at' value='{{ $model->created_at }}'>
-		<div>
-	</div>
-	<div class='col-12'>
-		<div class='mb-3'>
-			<label for='updated_at' class='form-label'>updated_at</label>
-			<input class='form-control' id='updated_at' name='updated_at' value='{{ $model->updated_at }}'>
-		<div>
-	</div>
-</div>
+		<form method='post' action='@if ( $model->id ) {{ route('users.update', [$model->id]) }}  @else {{ route('users.store') }} @endif'>
+			@csrf
+
+			@if($model->id)
+			@method('PUT')
+			@endif
+
+			<div class='row'>
+				<div class='col-12'>
+					<div class='mb-3'>
+						<label for='name' class='form-label'>name</label>
+						<input class='form-control' id='name' name='name' value='{{ $model->name }}'>
+					</div>
+				</div>
+				<div class='col-12'>
+					<div class='mb-3'>
+						<label for='email' class='form-label'>email</label>
+						<input class='form-control' id='email' name='email' value='{{ $model->email }}'>
+					</div>
+				</div>
+				<div class='col-12'>
+					<div class='mb-3'>
+						<label for='email_verified_at' class='form-label'>email_verified_at</label>
+						<input class='form-control' id='email_verified_at' name='email_verified_at' value='{{ $model->email_verified_at }}'>
+					</div>
+				</div>
+				<div class='col-12'>
+					<div class='mb-3'>
+						<label for='password' class='form-label'>password</label>
+						<input class='form-control' id='password' name='password' value='{{ $model->password }}'>
+					</div>
+				</div>
+				<div class='col-12'>
+					<div class='mb-3'>
+						<label for='remember_token' class='form-label'>remember_token</label>
+						<input class='form-control' id='remember_token' name='remember_token' value='{{ $model->remember_token }}'>
+					</div>
+				</div>
+				<div class='col-12'>
+					<button class='btn btn-success'>Salvar</button>
+				</div>
+			</div>
+		</form>
 
 @endsection

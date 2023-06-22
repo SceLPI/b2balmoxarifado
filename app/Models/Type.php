@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Type extends Model
 {
-    use HasFactory;
+	use HasFactory;
+
+	protected $table = "types";
 
     const CITYHALL = 1;
     const SECRETARY = 2;

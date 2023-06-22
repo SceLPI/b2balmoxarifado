@@ -11,12 +11,25 @@ class Product extends Model
 
 	protected $table = "products";
 
-	public function categories()
+	protected $casts = [
+		"created_at" => "datetime",
+		"updated_at" => "datetime",
+		"deleted_at" => "datetime",
+	];
+	public function getCategoriesAttribute()
 	{
-		return $this->belongsTo(Category::class, "id", "category_id"); 
+		return Category::all(); 
 	}
-	public function manufacturers()
+	public function category()
 	{
-		return $this->belongsTo(Manufacturer::class, "id", "manufacturer_id"); 
+		return $this->belongsTo(Category::class, "category_id", "id"); 
+	}
+	public function getManufacturersAttribute()
+	{
+		return Manufacturer::all(); 
+	}
+	public function manufacturer()
+	{
+		return $this->belongsTo(Manufacturer::class, "manufacturer_id", "id"); 
 	}
 }

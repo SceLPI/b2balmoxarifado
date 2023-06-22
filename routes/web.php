@@ -1,7 +1,13 @@
 <?php
 
-use App\Http\Controllers\Frontend\EntityController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\EntityController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ManufacturerController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TypeController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,15 +25,11 @@ use Illuminate\Support\Facades\Route;
 
 // Route::get('')
 
+Route::get('/', [HomeController::class, "index"]);
 Route::resource('/types', TypeController::class);
-
-Route::resource('/entities', EntityController::class);
-Route::resource('/builds', BuildController::class);
-Route::resource('/city-halls', CityHallController::class);
-Route::resource('/secretaries', SecretaryController::class);
-Route::resource('/warehouses', WarehouseController::class);
-
 Route::resource('/manufacturers', ManufacturerController::class);
+Route::resource('/entities', EntityController::class);
 Route::resource('/categories', CategoryController::class);
 Route::resource('/products', ProductController::class);
+Route::resource('/users', UserController::class);
 Route::resource('/orders', OrderController::class);

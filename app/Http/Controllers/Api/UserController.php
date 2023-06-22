@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\Controller;
-use App\Http\Repositories\TypeRepository;
+use App\Http\Repositories\UserRepository;
 
-class TypeController extends Controller
+class UserController extends Controller
 {
 
 		public function __construct() {
-			$this->repository = new TypeRepository();
+			$this->repository = new UserRepository();
 		}
 
 }

@@ -72,15 +72,18 @@ class ScaffoldGenerator extends Command
                 if ( $column->getAutoincrement() ) {
                     continue;
                 }
-                if ( $column->getDefault() || $column->getNotnull() ) {
-                    $columnName = $column->getName();
+
+                $columnName = $column->getName();
+
+                if ( get_class($column->getType()) == "Doctrine\DBAL\Types\BooleanType" ) {
+                    $content .= "\t\t\t\$this->model->" . $columnName . " = request()->get('" . $columnName . "') ?? 0;\n";
+                } else if ( $column->getDefault() || $column->getNotnull() ) {
                     $content .= "\t\t\tif ( request()->get('" . $columnName . "') !== null ) {\n";
                     $content .= "\t\t\t\t\$this->model->" . $columnName . " = request()->get('" . $columnName . "');\n";
                     $content .= "\t\t\t} else if ( !isset(\$this->model->" . $columnName . ") ) {\n";
                     $content .= "\t\t\t\tabort(400, \"" . $columnName . " cannot be null.\");\n";
                     $content .= "\t\t\t}\n";
                 } else if ( !$column->getDefault() || !$column->getNotnull() ) {
-                    $columnName = $column->getName();
                     $content .= "\t\t\tif ( \$" . $columnName . " = request()->get('" . $columnName . "') ) {\n";
                     $content .= "\t\t\t\t\$this->model->" . $columnName . " = \$" . $columnName . ";\n";
                     $content .= "\t\t\t}\n";
@@ -134,7 +137,7 @@ class ScaffoldGenerator extends Command
 
             $content = "<?php\n\n";
             $content .= "namespace App\Http\Controllers\Api;\n\n";
-            $content .= "use App\Http\Controllers\Controller;\n";
+            $content .= "use App\Http\Controllers\Api\Controller;\n";
             $content .= "use App\Http\Repositories\\" . $baseName . "Repository;\n\n";
             $content .= "class " . $controllerName . " extends Controller\n";
             $content .= "{\n\n";
@@ -167,9 +170,7 @@ class ScaffoldGenerator extends Command
         }
 
         $baseName = $controllerName;
-        $wordfyName = 
-
-        dd( $this->camelToSnakeCase($baseName) );
+        $wordfyName = $this->camelToSnakeCase($baseName);
 
         $this->checkRepository($details, $baseName);
 
@@ -184,18 +185,41 @@ class ScaffoldGenerator extends Command
         if ( !file_exists( $controllerPath ) || $this->option('overwritecontroller') == true ) {
             $file = fopen(  $controllerPath, "w+" );
 
-            //     $types = parent::_fetch();
-            //     return view('types.index')
-            //         ->with('types', $types);
-
             $content = "<?php\n\n";
             $content .= "namespace App\Http\Controllers;\n\n";
-            $content .= "use App\Http\Controllers\Api\\" . $controllerName . " as Api" . $controllerName . ";\n";
-            $content .= "class " . $controllerName . " extends Api" . $controllerName . "\n";
+            $content .= "use App\Http\Repositories\\" . $baseName . "Repository;\n\n";
+            $content .= "class " . $controllerName . " extends Controller\n";
             $content .= "{\n\n";
-            $content .= "\tpublic function index() {\n";
-            $content .= "\t\t\$" . $ . "\n";
+
+
+            $content .= "\tpublic function __construct() {\n";
+            $content .= "\t\t\$this->repository = new " . $baseName . "Repository();\n";
             $content .= "\t}\n\n";
+
+            $content .= "\tpublic function index() {\n";
+            $content .= "\t\t\$" . Str::plural($wordfyName) . " = parent::index(); \n\n";
+            $content .= "\t\treturn view('" . Str::plural($wordfyName) . ".index')->with('model', \$" . Str::plural($wordfyName) . " );\n";
+            $content .= "\t}\n\n";
+
+            $content .= "\tpublic function create() {\n";
+            $content .= "\t\treturn \$this->show();\n";
+            $content .= "\t}\n\n";
+
+            $content .= "\tpublic function show(\$id = null) {\n";
+            $content .= "\t\t\$" . $wordfyName . " = parent::show(\$id);\n\n";
+            $content .= "\t\treturn view('" . Str::plural($wordfyName) . ".form')->with('model', \$" . $wordfyName . " );\n";
+            $content .= "\t}\n\n";
+
+            $content .= "\tpublic function store() {\n";
+            $content .= "\t\t\$" . $wordfyName . " = parent::store();\n\n";
+            $content .= "\t\treturn redirect( route('" . Str::plural($wordfyName) . ".index') )->with('success', 'Criado com Sucesso.');\n";
+            $content .= "\t}\n\n";
+
+            $content .= "\tpublic function update(\$id = null) {\n";
+            $content .= "\t\t\$" . $wordfyName . " = parent::update(\$id);\n\n";
+            $content .= "\t\treturn redirect( route('" . Str::plural($wordfyName) . ".index') )->with('success', 'Atualizado com sucesso!');\n";
+            $content .= "\t}\n\n";
+
             $content .= "}";
 
             $this->info("Controller " . $controllerPath . " created. \n");
@@ -205,8 +229,6 @@ class ScaffoldGenerator extends Command
         } else {
 
         }
-
-        dd("aaa");
 
     }
 
@@ -239,6 +261,15 @@ class ScaffoldGenerator extends Command
             $content .= "\tprotected \$table = \"" . $details->getName() . "\";\n\n";
 
             $foreigns = $details->getForeignKeys();
+            $columns = $details->getColumns();
+
+            $content .= "\tprotected \$casts = [\n";
+            foreach ( $columns as $column ) {
+                if (get_class($column->getType()) == "Doctrine\DBAL\Types\DateTimeType") {
+                    $content .= "\t\t\"" . $column->getName() . "\" => \"datetime\",\n";
+                }
+            }
+            $content .= "\t];\n";
 
             foreach( $foreigns as $foreign ) {
 
@@ -254,12 +285,18 @@ class ScaffoldGenerator extends Command
                     }
                 }
 
-                $content .= "\tpublic function " . $foreign->getForeignTableName() . "()\n";
+                $content .= "\tpublic function get" . ucfirst($foreign->getForeignTableName()) . "Attribute()\n";
                 $content .= "\t{\n";
+                $content .= "\t\treturn " . $model . "::all(); \n";
+                $content .= "\t}\n";
+
+                $content .= "\tpublic function " . Str::singular($foreign->getForeignTableName()) . "()\n";
+                $content .= "\t{\n";
+
                 $content .= "\t\treturn \$this->belongsTo(" .
-                    $model .
-                    "::class, \"" . $foreign->getForeignColumns()[0] .
-                    "\", \"" . $foreign->getLocalColumns()[0] . "\"); \n";
+                                $model .
+                                "::class, \"" . $foreign->getLocalColumns()[0] .
+                                "\", \"" . $foreign->getForeignColumns()[0] . "\"); \n";
                 $content .= "\t}\n";
             }
 
@@ -312,10 +349,7 @@ class ScaffoldGenerator extends Command
         $this->createForm($details, $form);
     }
 
-    private function createIndex(Table $details, $file) {
-    }
-
-    private function createForm(Table $details, $file) {
+    private function columnsToBuild(Table $details) {
         $columns = $details->getColumns();
         $foreigns = $details->getForeignKeys();
 
@@ -331,12 +365,16 @@ class ScaffoldGenerator extends Command
         }
 
         foreach( $columns as $name => $column ) {
+            $type = $column->getType();
             if ( in_array($name, array_keys($skipForeigns) ) ) {
                 $columnsToBuild[] = [
                     "name" => $skipForeigns[$name]["on"],
                     "required" => $column->getNotnull() && !($column->getDefault() || $column->getAutoincrement()),
                     "isForeign" => true,
                     "localColumn" => $name,
+                    "skip" => $column->getAutoincrement(),
+                    "isTimestamp" => get_class($type) == "Doctrine\DBAL\Types\DateTimeType",
+                    "isBoolean" => get_class($type) == "Doctrine\DBAL\Types\BooleanType",
                 ];
                 continue;
             }
@@ -345,39 +383,149 @@ class ScaffoldGenerator extends Command
                 "required" => $column->getNotnull() && !($column->getDefault() || $column->getAutoincrement()),
                 "length" => $column->getLength(),
                 "isForeign" => false,
+                "skip" => $column->getAutoincrement(),
+                "isTimestamp" => get_class($type) == "Doctrine\DBAL\Types\DateTimeType",
+                "isBoolean" => get_class($type) == "Doctrine\DBAL\Types\BooleanType",
             ];
         }
 
+        return $columnsToBuild;
+    }
+
+    private function createIndex(Table $details, $file) {
+
+        $columnsToBuild = $this->columnsToBuild($details);
+
+        $content = "@extends('layout.template')\n";
+        $content .= "@section('content')\n";
+        $content .= "\t<div class='row'>\n";
+
+        $content .= "\t\t<a href=\"{{ route('" . $details->getName() . ".create') }}\" class=\"btn btn-success mt-3 mb-5\">+ Adicionar</a>\n";
+
+        $content .= "\t\t<table class='table table-striped'>\n";
+
+        $content .= "\t\t\t<thead>\n";
+        $content .= "\t\t\t\t<tr>\n";
+
+        $content .= "\t\t\t\t\t<th>\n";
+        $content .= "\t\t\t\t\t\t#\n";
+        $content .= "\t\t\t\t\t</th>\n";
+
+        foreach( $columnsToBuild as $columnToBuild) {
+            if ( $columnToBuild["skip"]) {
+                continue;
+            }
+            $content .= "\t\t\t\t\t<th>\n";
+            $content .= "\t\t\t\t\t\t" . $columnToBuild["name"] . "\n";
+            $content .= "\t\t\t\t\t</th>\n";
+        }
+        $content .= "\t\t\t\t\t<th>\n";
+        $content .= "\t\t\t\t\t\tAções\n";
+        $content .= "\t\t\t\t\t</th>\n";
+        $content .= "\t\t\t\t</tr>\n";
+        $content .= "\t\t\t</thead>\n";
+
+        $content .= "\t\t\t<tbody>\n";
+        $content .= "\t\t\t\t@foreach( \$model as \$item)\n";
+        $content .= "\t\t\t\t<tr>\n";
+
+        $content .= "\t\t\t\t\t<td>\n";
+        $content .= "\t\t\t\t\t\t{{ \$item->id }}\n";
+        $content .= "\t\t\t\t\t</td>\n";
+
+        foreach( $columnsToBuild as $columnToBuild) {
+            if ( $columnToBuild["skip"]) {
+                continue;
+            }
+            $content .= "\t\t\t\t\t<td>\n";
+            if ( $columnToBuild["isTimestamp"]) {
+                $content .= "\t\t\t\t\t\t{{ \$item->" . $columnToBuild["name"] . "?->format(\"d/m/Y H:i:s\") }}\n";
+            } else if ( $columnToBuild["isBoolean"] ) {
+                $content .= "\t\t\t\t\t\t{{ \$item->" . Str::singular($columnToBuild["name"]) . " ? \"SIM\" : \"NÃO\" }}\n";
+            } else if ( $columnToBuild["isForeign"] ) {
+                $content .= "\t\t\t\t\t\t{{ \$item->" . Str::singular($columnToBuild["name"]) . "->name }}\n";
+            } else {
+                $content .= "\t\t\t\t\t\t{{ \$item->" . $columnToBuild["name"] . " }}\n";
+            }
+            $content .= "\t\t\t\t\t</td>\n";
+        }
+
+
+        $content .= "\t\t\t\t\t<td>\n";
+        $content .= "\t\t\t\t\t\t<a href=\"{{ route('" . $details->getName() . ".show', [\"\$item->id\"]) }}\" class=\"btn btn-warning\">EDITAR</a>\n";
+        $content .= "\t\t\t\t\t\t<a href=\"{{ route('" . $details->getName() . ".destroy', [\"\$item->id\"]) }}\" class=\"btn btn-danger\">EXCLUIR</a>\n";
+        $content .= "\t\t\t\t\t</td>\n";
+
+        $content .= "\t\t\t\t</tr>\n";
+        $content .= "\t\t\t\t@endforeach\n";
+        $content .= "\t\t\t</tbody>\n";
+
+        $content .= "\t\t</table>\n";
+        $content .= "\t</div>\n";
+        $content .= "@endsection";
+
+        fwrite($file, $content);
+        fclose($file);
+    }
+
+    private function createForm(Table $details, $file) {
+
+        $columnsToBuild = $this->columnsToBuild($details);
+
         $content = "@extends('layout.template')\n";
         $content .= "@section('content')\n\n";
-        $content .= "<form method='post'>\n";
-        $content .= "@csrf_field\n";
-        $content .= "<div class='row'>\n";
+        $content .= "\t\t<form method='post' action='@if ( \$model->id ) {{ route('" . $details->getName() . ".update', [\$model->id]) }}  @else {{ route('" . $details->getName() . ".store') }} @endif'>\n";
+        $content .= "\t\t\t@csrf\n\n";
+
+        $content .= "\t\t\t@if(\$model->id)\n";
+        $content .= "\t\t\t@method('PUT')\n";
+        $content .= "\t\t\t@endif\n";
+
+        $content .= "\n\t\t\t<div class='row'>\n";
 
         foreach( $columnsToBuild as $columnToBuild) {
 
-            $content .= "\t<div class='col-12'>\n";
-            $content .= "\t\t<div class='mb-3'>\n";
-            $content .= "\t\t\t<label for='" . $columnToBuild["name"] . "' class='form-label'>" . $columnToBuild["name"] . "</label>\n";
+            if ( $columnToBuild["skip"] || in_array($columnToBuild["name"], ["created_at", "updated_at", "deleted_at"]) ) {
+                continue;
+            }
+
+            $content .= "\t\t\t\t<div class='col-12'>\n";
+            $content .= "\t\t\t\t\t<div class='mb-3'>\n";
+            $content .= "\t\t\t\t\t\t<label for='" . $columnToBuild["name"] . "' class='form-label'>" . $columnToBuild["name"] . "</label>\n";
 
             if ( $columnToBuild["isForeign"] ) {
-                $content .= "\t\t\t<select class='form-control' id='" . $columnToBuild["localColumn"] .
+                $content .= "\t\t\t\t\t\t<select class='form-control' id='" . $columnToBuild["localColumn"] .
                 "' name='" . $columnToBuild["localColumn"] . "'>\n";
-                $content .= "\t\t\t\t<option value=''>-- SELECIONE --</option>\n";
-                $content .= "\t\t\t\t@foreach (\$model->" . $columnToBuild["name"] . " as \$relationshipModel )\n";
-                $content .= "\t\t\t\t\t<option @if (\$relationshipModel->id == \$model->" . $columnToBuild["localColumn"] . ") selected  @endif value='{{ \$relationshipModel->id }}'>{{ \$relationshipModel->name }}</option>\n";
-                $content .= "\t\t\t\t@endforeach\n";
-                $content .= "\t\t\t</select>\n";
+                $content .= "\t\t\t\t\t\t\t<option value=''>-- SELECIONE --</option>\n";
+                $content .= "\t\t\t\t\t\t\t@foreach (\$model->" . $columnToBuild["name"] . " as \$relationshipModel )\n";
+                $content .= "\t\t\t\t\t\t\t\t<option @if (\$relationshipModel->id == \$model->" . $columnToBuild["localColumn"] . ") selected  @endif value='{{ \$relationshipModel->id }}'>{{ \$relationshipModel->name }}</option>\n";
+                $content .= "\t\t\t\t\t\t\t@endforeach\n";
+                $content .= "\t\t\t\t\t\t</select>\n";
+            } else if ($columnToBuild["isTimestamp"]) {
+                $content .= "\t\t\t\t\t\t<input type=\"date\" class='form-control' id='" . $columnToBuild["name"] .
+                "' name='" . $columnToBuild["name"] . "' value='{{ \$model->" . $columnToBuild["name"] . " }}'>\n";
+            } else if ($columnToBuild["isBoolean"]) {
+                $content .= "\t\t\t\t\t\t<div class=\"form-check\">\n";
+                $content .= "\t\t\t\t\t\t\t<input class=\"form-check-input\" value=\"1\" type=\"checkbox\" @if (\$model->" . $columnToBuild["name"] . ") checked @endif value=\"\" id=\"" . $columnToBuild["name"] . "\" name=\"" . $columnToBuild["name"] . "\">\n";
+                $content .= "\t\t\t\t\t\t\t<label class=\"form-check-label\" for=\"" . $columnToBuild["name"] . "\">\n";
+                $content .= "\t\t\t\t\t\t\t\tSIM, ESTÁ FINALIZADO\n";
+                $content .= "\t\t\t\t\t\t\t</label>\n";
+                $content .= "\t\t\t\t\t\t</div>\n";
             } else {
-                $content .= "\t\t\t<input class='form-control' id='" . $columnToBuild["name"] .
+                $content .= "\t\t\t\t\t\t<input class='form-control' id='" . $columnToBuild["name"] .
                 "' name='" . $columnToBuild["name"] . "' value='{{ \$model->" . $columnToBuild["name"] . " }}'>\n";
             }
 
-            $content .= "\t\t<div>\n";
-            $content .= "\t</div>\n";
+            $content .= "\t\t\t\t\t</div>\n";
+            $content .= "\t\t\t\t</div>\n";
         }
 
-        $content .= "</div>\n\n";
+        $content .= "\t\t\t\t<div class='col-12'>\n";
+        $content .= "\t\t\t\t\t<button class='btn btn-success'>Salvar</button>\n";
+        $content .= "\t\t\t\t</div>\n";
+
+        $content .= "\t\t\t</div>\n";
+        $content .= "\t\t</form>\n\n";
         $content .= "@endsection";
 
         fwrite($file, $content);

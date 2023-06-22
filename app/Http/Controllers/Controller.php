@@ -13,40 +13,28 @@ class Controller extends BaseController
 
     protected Repository $repository;
 
-    protected function _fetch() {
+
+    public function index() {
         return $this->repository->fetchAll();
     }
 
-    protected function _save() {
-        return $this->repository->saveFromRequest();
-    }
-
-    protected function _update($id) {
-        return $this->repository->updateFromRequest($id);
-    }
-
-    protected function _delete($id) {
-        $this->repository->delete($id);
-    }
-
-    public function index() {
-        $response = $this->_fetch();
-        return response()->json( $response );
+    public function show($id = null) {
+        if ( !$id ) {
+            return $this->repository->create();
+        }
+        return $this->repository->find($id);
     }
 
     public function store() {
-        $response = $this->_save();
-        return response()->json( $response, 201 );
+        return $this->repository->saveFromRequest();
     }
 
     public function update($id) {
-        $response = $this->_update($id);
-        return response()->json( $response );
+        return $this->repository->updateFromRequest($id);
     }
 
     public function destroy($id) {
-        $this->_delete($id);
-        return response()->json("", 204);
+        $this->repository->delete($id);
     }
 
 }
