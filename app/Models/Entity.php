@@ -11,6 +11,10 @@ class Entity extends Model
 
 	protected $table = "entities";
 
+	protected $casts = [
+		"created_at" => "datetime",
+		"updated_at" => "datetime",
+	];
 	public function getTypesAttribute()
 	{
 		return Type::all(); 

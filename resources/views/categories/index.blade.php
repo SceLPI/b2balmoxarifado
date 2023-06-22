@@ -2,20 +2,20 @@
 @section('content')
 	<div class='row'>
 		<a href="{{ route('categories.create') }}" class="btn btn-success mt-3 mb-5">+ Adicionar</a>
-		<table class='table table-striped'>
+		<table class='table table-striped table-bordered'>
 			<thead>
 				<tr>
 					<th>
 						#
 					</th>
 					<th>
-						name
+						{{ __('categories.index.name') }}
 					</th>
 					<th>
-						created_at
+						{{ __('database.created_at') }}
 					</th>
 					<th>
-						updated_at
+						{{ __('database.updated_at') }}
 					</th>
 					<th>
 						Ações
@@ -32,10 +32,10 @@
 						{{ $item->name }}
 					</td>
 					<td>
-						{{ $item->created_at->format("d/m/Y H:i:s") }}
+						{{ $item->created_at?->format("d/m/Y H:i:s") }}
 					</td>
 					<td>
-						{{ $item->updated_at->format("d/m/Y H:i:s") }}
+						{{ $item->updated_at?->format("d/m/Y H:i:s") }}
 					</td>
 					<td>
 						<a href="{{ route('categories.show', ["$item->id"]) }}" class="btn btn-warning">EDITAR</a>

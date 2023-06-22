@@ -402,7 +402,7 @@ class ScaffoldGenerator extends Command
 
         $content .= "\t\t<a href=\"{{ route('" . $details->getName() . ".create') }}\" class=\"btn btn-success mt-3 mb-5\">+ Adicionar</a>\n";
 
-        $content .= "\t\t<table class='table table-striped'>\n";
+        $content .= "\t\t<table class='table table-striped table-bordered'>\n";
 
         $content .= "\t\t\t<thead>\n";
         $content .= "\t\t\t\t<tr>\n";
@@ -416,7 +416,11 @@ class ScaffoldGenerator extends Command
                 continue;
             }
             $content .= "\t\t\t\t\t<th>\n";
-            $content .= "\t\t\t\t\t\t" . $columnToBuild["name"] . "\n";
+            if ( in_array($columnToBuild["name"], ['created_at', 'updated_at', 'deleted_at']) ) {
+                $content .= "\t\t\t\t\t\t{{ __('database." . $columnToBuild["name"] . "') }}\n";
+            } else {
+                $content .= "\t\t\t\t\t\t{{ __('" . $details->getName() . ".index." . $columnToBuild["name"] . "') }}\n";
+            }
             $content .= "\t\t\t\t\t</th>\n";
         }
         $content .= "\t\t\t\t\t<th>\n";
@@ -491,7 +495,11 @@ class ScaffoldGenerator extends Command
 
             $content .= "\t\t\t\t<div class='col-12'>\n";
             $content .= "\t\t\t\t\t<div class='mb-3'>\n";
-            $content .= "\t\t\t\t\t\t<label for='" . $columnToBuild["name"] . "' class='form-label'>" . $columnToBuild["name"] . "</label>\n";
+
+            if ( in_array($columnToBuild["name"], ['created_at', 'updated_at', 'deleted_at']) ) {$content .= "\t\t\t\t\t\t<label for='" . $columnToBuild["name"] . "' class='form-label'>{{ __('database." . $columnToBuild["name"] . "') }}</label>\n";
+            } else {
+                $content .= "\t\t\t\t\t\t<label for='" . $columnToBuild["name"] . "' class='form-label'>{{ __('" . $details->getName() . ".form." . $columnToBuild["name"] . "') }}</label>\n";
+            }
 
             if ( $columnToBuild["isForeign"] ) {
                 $content .= "\t\t\t\t\t\t<select class='form-control' id='" . $columnToBuild["localColumn"] .
@@ -508,7 +516,7 @@ class ScaffoldGenerator extends Command
                 $content .= "\t\t\t\t\t\t<div class=\"form-check\">\n";
                 $content .= "\t\t\t\t\t\t\t<input class=\"form-check-input\" value=\"1\" type=\"checkbox\" @if (\$model->" . $columnToBuild["name"] . ") checked @endif value=\"\" id=\"" . $columnToBuild["name"] . "\" name=\"" . $columnToBuild["name"] . "\">\n";
                 $content .= "\t\t\t\t\t\t\t<label class=\"form-check-label\" for=\"" . $columnToBuild["name"] . "\">\n";
-                $content .= "\t\t\t\t\t\t\t\tSIM, ESTÁ FINALIZADO\n";
+                $content .= "\t\t\t\t\t\t\t\t{{ __('" . $details->getName() . ".form." . $columnToBuild["name"] . ".checkbox') }}\n";
                 $content .= "\t\t\t\t\t\t\t</label>\n";
                 $content .= "\t\t\t\t\t\t</div>\n";
             } else {

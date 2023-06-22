@@ -26,19 +26,19 @@ return new class extends Migration
             ],
             [
                 "id" => 2,
-                "name" => "Secretaria",
+                "name" => "Secretaria de Educação",
                 "created_at" => now(),
                 "updated_at" => now(),
             ],
             [
                 "id" => 3,
-                "name" => "Construção",
+                "name" => "Secretaria de Saúde",
                 "created_at" => now(),
                 "updated_at" => now(),
             ],
             [
                 "id" => 4,
-                "name" => "Almoxarifado",
+                "name" => "Secretaria Social",
                 "created_at" => now(),
                 "updated_at" => now(),
             ],

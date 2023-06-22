@@ -11,4 +11,8 @@ class Category extends Model
 
 	protected $table = "categories";
 
+	protected $casts = [
+		"created_at" => "datetime",
+		"updated_at" => "datetime",
+	];
 }

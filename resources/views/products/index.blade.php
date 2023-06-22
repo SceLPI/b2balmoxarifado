@@ -2,35 +2,38 @@
 @section('content')
 	<div class='row'>
 		<a href="{{ route('products.create') }}" class="btn btn-success mt-3 mb-5">+ Adicionar</a>
-		<table class='table table-striped'>
+		<table class='table table-striped table-bordered'>
 			<thead>
 				<tr>
 					<th>
 						#
 					</th>
 					<th>
-						manufacturers
+						{{ __('products.index.manufacturers') }}
 					</th>
 					<th>
-						categories
+						{{ __('products.index.categories') }}
 					</th>
 					<th>
-						title
+						{{ __('products.index.warehouses') }}
 					</th>
 					<th>
-						description
+						{{ __('products.index.title') }}
 					</th>
 					<th>
-						code
+						{{ __('products.index.code') }}
 					</th>
 					<th>
-						created_at
+						{{ __('products.index.stock') }}
 					</th>
 					<th>
-						updated_at
+						{{ __('database.created_at') }}
 					</th>
 					<th>
-						deleted_at
+						{{ __('database.updated_at') }}
+					</th>
+					<th>
+						{{ __('database.deleted_at') }}
 					</th>
 					<th>
 						Ações
@@ -50,13 +53,16 @@
 						{{ $item->category->name }}
 					</td>
 					<td>
+						{{ $item->warehouse->name }}
+					</td>
+					<td>
 						{{ $item->title }}
 					</td>
 					<td>
-						{{ $item->description }}
+						{{ $item->code }}
 					</td>
 					<td>
-						{{ $item->code }}
+						{{ $item->stock }}
 					</td>
 					<td>
 						{{ $item->created_at?->format("d/m/Y H:i:s") }}

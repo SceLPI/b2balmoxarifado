@@ -11,4 +11,8 @@ class Manufacturer extends Model
 
 	protected $table = "manufacturers";
 
+	protected $casts = [
+		"created_at" => "datetime",
+		"updated_at" => "datetime",
+	];
 }

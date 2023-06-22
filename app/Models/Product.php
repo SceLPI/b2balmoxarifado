@@ -24,6 +24,14 @@ class Product extends Model
 	{
 		return $this->belongsTo(Category::class, "category_id", "id"); 
 	}
+	public function getWarehousesAttribute()
+	{
+		return Warehouse::all(); 
+	}
+	public function warehouse()
+	{
+		return $this->belongsTo(Warehouse::class, "warehouse_id", "id"); 
+	}
 	public function getManufacturersAttribute()
 	{
 		return Manufacturer::all(); 

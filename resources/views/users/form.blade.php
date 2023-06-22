@@ -24,7 +24,7 @@
 				<div class='col-12'>
 					<div class='mb-3'>
 						<label for='email_verified_at' class='form-label'>email_verified_at</label>
-						<input class='form-control' id='email_verified_at' name='email_verified_at' value='{{ $model->email_verified_at }}'>
+						<input type="date" class='form-control' id='email_verified_at' name='email_verified_at' value='{{ $model->email_verified_at }}'>
 					</div>
 				</div>
 				<div class='col-12'>

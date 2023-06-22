@@ -21,7 +21,7 @@ class OrderRepository extends Repository
 			} else if ( !isset($this->model->ordered_by) ) {
 				abort(400, "ordered_by cannot be null.");
 			}
-			$this->model->finished = request()->get('finished') ?? 0;
+			$this->model->is_finished = request()->get('is_finished') ?? 0;
 			if ( $created_at = request()->get('created_at') ) {
 				$this->model->created_at = $created_at;
 			}

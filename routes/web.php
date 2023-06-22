@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,10 +26,11 @@ use Illuminate\Support\Facades\Route;
 
 // Route::get('')
 
-Route::get('/', [HomeController::class, "index"]);
+Route::get('/', [HomeController::class, "home"])->name('home');
 Route::resource('/types', TypeController::class);
 Route::resource('/manufacturers', ManufacturerController::class);
 Route::resource('/entities', EntityController::class);
+Route::resource('/warehouses', WarehouseController::class);
 Route::resource('/categories', CategoryController::class);
 Route::resource('/products', ProductController::class);
 Route::resource('/users', UserController::class);

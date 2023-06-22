@@ -2,32 +2,32 @@
 @section('content')
 	<div class='row'>
 		<a href="{{ route('users.create') }}" class="btn btn-success mt-3 mb-5">+ Adicionar</a>
-		<table class='table table-striped'>
+		<table class='table table-striped table-bordered'>
 			<thead>
 				<tr>
 					<th>
 						#
 					</th>
 					<th>
-						name
+						{{ __('database.name') }}
 					</th>
 					<th>
-						email
+						{{ __('database.email') }}
 					</th>
 					<th>
-						email_verified_at
+						{{ __('database.email_verified_at') }}
 					</th>
 					<th>
-						password
+						{{ __('database.password') }}
 					</th>
 					<th>
-						remember_token
+						{{ __('database.remember_token') }}
 					</th>
 					<th>
-						created_at
+						{{ __('database.created_at') }}
 					</th>
 					<th>
-						updated_at
+						{{ __('database.updated_at') }}
 					</th>
 					<th>
 						Ações

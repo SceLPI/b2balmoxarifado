@@ -14,6 +14,5 @@ class Type extends Model
     const CITYHALL = 1;
     const SECRETARY = 2;
     const BUILD = 3;
-    const WAREHOUSE = 4;
 
 }

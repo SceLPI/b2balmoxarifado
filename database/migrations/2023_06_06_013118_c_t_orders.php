@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->unsignedBigInteger('entity_id');
             $table->string('ordered_by');
-            $table->boolean('finished')->default(false);
+            $table->boolean('is_finished')->default(false);
 
             $table->timestamps();
 

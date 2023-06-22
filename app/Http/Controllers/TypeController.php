@@ -12,7 +12,7 @@ class TypeController extends Controller
 	}
 
 	public function index() {
-		$types = parent::index();
+		$types = parent::index(); 
 
 		return view('types.index')->with('model', $types );
 	}
@@ -30,13 +30,13 @@ class TypeController extends Controller
 	public function store() {
 		$type = parent::store();
 
-		return redirect( route('types.show', [$type->id]) )->with('success', 'Criado com Sucesso.');
+		return redirect( route('types.index') )->with('success', 'Criado com Sucesso.');
 	}
 
-	public function update($id) {
+	public function update($id = null) {
 		$type = parent::update($id);
 
-		return back()->with('success', 'Atualizado com sucesso!');
+		return redirect( route('types.index') )->with('success', 'Atualizado com sucesso!');
 	}
 
 }

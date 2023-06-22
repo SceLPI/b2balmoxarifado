@@ -2,26 +2,26 @@
 @section('content')
 	<div class='row'>
 		<a href="{{ route('orders.create') }}" class="btn btn-success mt-3 mb-5">+ Adicionar</a>
-		<table class='table table-striped'>
+		<table class='table table-striped table-bordered'>
 			<thead>
 				<tr>
 					<th>
 						#
 					</th>
 					<th>
-						entities
+						{{ __('orders.index.entities') }}
 					</th>
 					<th>
-						ordered_by
+						{{ __('orders.index.ordered_by') }}
 					</th>
 					<th>
-						finished
+						{{ __('orders.index.is_finished') }}
 					</th>
 					<th>
-						created_at
+						{{ __('database.created_at') }}
 					</th>
 					<th>
-						updated_at
+						{{ __('database.updated_at') }}
 					</th>
 					<th>
 						Ações
@@ -41,7 +41,7 @@
 						{{ $item->ordered_by }}
 					</td>
 					<td>
-						{{ $item->finished ? "SIM" : "NÃO" }}
+						{{ $item->is_finished ? "SIM" : "NÃO" }}
 					</td>
 					<td>
 						{{ $item->created_at?->format("d/m/Y H:i:s") }}

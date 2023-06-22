@@ -21,18 +21,23 @@ class ProductRepository extends Repository
 			} else if ( !isset($this->model->category_id) ) {
 				abort(400, "category_id cannot be null.");
 			}
+			if ( $warehouse_id = request()->get('warehouse_id') ) {
+				$this->model->warehouse_id = $warehouse_id;
+			}
 			if ( request()->get('title') !== null ) {
 				$this->model->title = request()->get('title');
 			} else if ( !isset($this->model->title) ) {
 				abort(400, "title cannot be null.");
 			}
-			if ( $description = request()->get('description') ) {
-				$this->model->description = $description;
-			}
 			if ( request()->get('code') !== null ) {
 				$this->model->code = request()->get('code');
 			} else if ( !isset($this->model->code) ) {
 				abort(400, "code cannot be null.");
+			}
+			if ( request()->get('stock') !== null ) {
+				$this->model->stock = request()->get('stock');
+			} else if ( !isset($this->model->stock) ) {
+				abort(400, "stock cannot be null.");
 			}
 			if ( $created_at = request()->get('created_at') ) {
 				$this->model->created_at = $created_at;

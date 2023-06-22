@@ -11,7 +11,7 @@
 			<div class='row'>
 				<div class='col-12'>
 					<div class='mb-3'>
-						<label for='name' class='form-label'>name</label>
+						<label for='name' class='form-label'>{{ __('categories.form.name') }}</label>
 						<input class='form-control' id='name' name='name' value='{{ $model->name }}'>
 					</div>
 				</div>

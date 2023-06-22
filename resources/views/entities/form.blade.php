@@ -11,7 +11,7 @@
 			<div class='row'>
 				<div class='col-12'>
 					<div class='mb-3'>
-						<label for='types' class='form-label'>types</label>
+						<label for='types' class='form-label'>{{ __('entities.form.types') }}</label>
 						<select class='form-control' id='type_id' name='type_id'>
 							<option value=''>-- SELECIONE --</option>
 							@foreach ($model->types as $relationshipModel )
@@ -22,7 +22,7 @@
 				</div>
 				<div class='col-12'>
 					<div class='mb-3'>
-						<label for='name' class='form-label'>name</label>
+						<label for='name' class='form-label'>{{ __('entities.form.name') }}</label>
 						<input class='form-control' id='name' name='name' value='{{ $model->name }}'>
 					</div>
 				</div>
