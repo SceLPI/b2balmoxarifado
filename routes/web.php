@@ -26,12 +26,18 @@ use Illuminate\Support\Facades\Route;
 
 // Route::get('')
 
-Route::get('/', [HomeController::class, "home"])->name('home');
-Route::resource('/types', TypeController::class);
-Route::resource('/manufacturers', ManufacturerController::class);
-Route::resource('/entities', EntityController::class);
-Route::resource('/warehouses', WarehouseController::class);
-Route::resource('/categories', CategoryController::class);
-Route::resource('/products', ProductController::class);
-Route::resource('/users', UserController::class);
-Route::resource('/orders', OrderController::class);
+Route::middleware('auth')->prefix('/')->group(function () {
+    Route::get('/', [HomeController::class, "home"])->name('home');
+    Route::resource('/types', TypeController::class);
+    Route::resource('/manufacturers', ManufacturerController::class);
+    Route::resource('/entities', EntityController::class);
+    Route::resource('/warehouses', WarehouseController::class);
+    Route::resource('/categories', CategoryController::class);
+    Route::resource('/products', ProductController::class);
+    Route::resource('/users', UserController::class);
+    Route::resource('/orders', OrderController::class);
+});
+
+Auth::routes();
+
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
