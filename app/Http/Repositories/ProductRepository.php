@@ -2,9 +2,12 @@
 
 namespace App\Http\Repositories;
 use App\Models\Product;
+use App\Traits\Product\ProductRepositoryTrait;
 
 class ProductRepository extends Repository
 {
+
+    use ProductRepositoryTrait;
 
 		public function __construct() {
 			$this->model = new Product;

@@ -69,6 +69,10 @@
                                         <div class="sb-nav-link-icon"><i class="fas fa-fw fa-wrench"></i></div>
                                         Fabricantes
                                     </a>
+                                    <a class="nav-link" href="{{ route('suppliers.index') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-fw fa-bank"></i></div>
+                                        Fornecedores
+                                    </a>
                                     <a class="nav-link" href="{{ route('categories.index') }}">
                                         <div class="sb-nav-link-icon"><i class="fas fa-fw fa-tags"></i></div>
                                         Categorias
@@ -76,6 +80,10 @@
                                     <a class="nav-link" href="{{ route('products.index') }}">
                                         <div class="sb-nav-link-icon"><i class="fas fa-fw fa-barcode"></i></div>
                                         Itens
+                                    </a>
+                                    <a class="nav-link" href="{{ route('products.invoice') }}">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-fw fa-file-code"></i></div>
+                                        Nota Fiscal
                                     </a>
                                 </nav>
                             </div>

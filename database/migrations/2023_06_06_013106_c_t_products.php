@@ -16,14 +16,16 @@ return new class extends Migration
 
             $table->string('title');
             $table->string('code', 40)->unique();
-            $table->unsignedBigInteger('manufacturer_id');
-            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('manufacturer_id')->nullable();
+            $table->unsignedBigInteger('supplier_id')->nullable();
+            $table->unsignedBigInteger('category_id')->nullabe();
 
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
             $table->foreign('category_id')->references('id')->on('categories');
+            $table->foreign('supplier_id')->references('id')->on('suppliers');
         });
     }
 

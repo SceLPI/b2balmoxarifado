@@ -15,4 +15,6 @@ return [
     'index.description' => 'Descrição',
     'index.code' => 'Código',
     'index.stock' => 'Estoque',
+
+    'invoice.form.select' => 'Arquivo XML da Nota Fiscal',
 ];

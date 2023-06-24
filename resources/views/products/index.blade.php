@@ -47,7 +47,7 @@
 						{{ $item->id }}
 					</td>
 					<td>
-						{{ $item->manufacturer->name }}
+						{{ $item->manufacturer?->name }}
 					</td>
 					<td>
 						{{ $item->category->name }}
