@@ -27,7 +27,7 @@ return new class extends Migration
             [
                 "name" => "Gean B2B",
                 "email" => "gean@b2balmoxarifado.com.br",
-                "password" => Hash::make("986532@"),
+                "password" => Hash::make("123456"),
                 "email_verified_at" => now(),
             ],
             [
