@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EntityController;
 use App\Http\Controllers\HomeController;
@@ -28,6 +29,7 @@ use Illuminate\Support\Facades\Route;
 // Route::get('')
 
 Route::middleware('auth')->prefix('/')->group(function () {
+    Route::get('/logout', [AuthController::class, "logout"])->name('auth.logout');
     Route::get('/', [HomeController::class, "home"])->name('home');
     Route::resource('/types', TypeController::class);
     Route::resource('/manufacturers', ManufacturerController::class);

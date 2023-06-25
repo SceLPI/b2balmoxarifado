@@ -28,9 +28,9 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">Configurações</a></li>
-                        <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="#!">Deslogar</a></li>
+                        {{-- <li><a class="dropdown-item" href="#!">Configurações</a></li> --}}
+                        {{-- <li><hr class="dropdown-divider" /></li> --}}
+                        <li><a class="dropdown-item" href="{{ route('auth.logout') }}">Deslogar</a></li>
                     </ul>
                 </li>
             </ul>
@@ -156,7 +156,7 @@
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small">Logado Como:</div>
-                        {{ request()->user()  }}
+                        {{ request()->user()->email  }}
                     </div>
                 </nav>
             </div>
