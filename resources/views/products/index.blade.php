@@ -12,6 +12,9 @@
 						{{ __('products.index.manufacturers') }}
 					</th>
 					<th>
+						{{ __('products.index.suppliers') }}
+					</th>
+					<th>
 						{{ __('products.index.categories') }}
 					</th>
 					<th>
@@ -25,6 +28,9 @@
 					</th>
 					<th>
 						{{ __('products.index.stock') }}
+					</th>
+					<th>
+						{{ __('products.index.ultimo_valor_compra') }}
 					</th>
 					<th>
 						{{ __('database.created_at') }}
@@ -50,10 +56,13 @@
 						{{ $item->manufacturer?->name }}
 					</td>
 					<td>
-						{{ $item->category->name }}
+						{{ $item->supplier?->name }}
 					</td>
 					<td>
-						{{ $item->warehouse->name }}
+						{{ $item->category?->name }}
+					</td>
+					<td>
+						{{ $item->warehouse?->name }}
 					</td>
 					<td>
 						{{ $item->title }}
@@ -63,6 +72,9 @@
 					</td>
 					<td>
 						{{ $item->stock }}
+					</td>
+					<td>
+						{{ $item->ultimo_valor_compra }}
 					</td>
 					<td>
 						{{ $item->created_at?->format("d/m/Y H:i:s") }}

@@ -16,8 +16,8 @@ return new class extends Migration
 
             $table->string('fantasy_name');
             $table->string('social_reason');
-            $table->string('cnpj');
-            $table->string('phone');
+            $table->string('cnpj')->comment("{ \"mask\" : \"00.000.000/0000-00\" }");
+            $table->string('phone')->comment("{ \"mask\" : \"(00) 00000-0000\" }");
 
             $table->timestamps();
         });

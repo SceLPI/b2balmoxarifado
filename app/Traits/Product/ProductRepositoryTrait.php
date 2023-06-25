@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 trait ProductRepositoryTrait {
     public function saveProductFromXML($product) : Model {
 
-        $productModel = Product::where('code', $product["code"])->first();
+        $productModel = Product::where('code', $product["code"])
+                                    ->where('warehouse_id', $product["warehouse_id"])
+                                    ->where('supplier_id', $product["supplier_id"])
+                                    ->first();
 
         if ( $productModel ) {
             $stock = $productModel->stock;

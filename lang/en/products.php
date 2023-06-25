@@ -8,6 +8,8 @@ return [
     'form.description' => 'Descrição do Produto',
     'form.code' => 'Código do Produto',
     'form.stock' => 'Estoque',
+    'form.suppliers' => 'Fornecedor',
+    'form.ultimo_valor_compra' => 'Ultimo Valor de Compra',
     'index.manufacturers' => 'Fabricante',
     'index.categories' => 'Categoria',
     'index.warehouses' => 'Almoxarifado',
@@ -15,6 +17,7 @@ return [
     'index.description' => 'Descrição',
     'index.code' => 'Código',
     'index.stock' => 'Estoque',
-
+    'index.suppliers' => 'Fornecedor',
+    'index.ultimo_valor_compra' => 'UVC',
     'invoice.form.select' => 'Arquivo XML da Nota Fiscal',
 ];

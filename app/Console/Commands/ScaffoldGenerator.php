@@ -366,6 +366,9 @@ class ScaffoldGenerator extends Command
 
         foreach( $columns as $name => $column ) {
             $type = $column->getType();
+            $comment = json_decode($column->getComment());
+            $mask = $comment?->mask;
+
             if ( in_array($name, array_keys($skipForeigns) ) ) {
                 $columnsToBuild[] = [
                     "name" => $skipForeigns[$name]["on"],
@@ -375,6 +378,7 @@ class ScaffoldGenerator extends Command
                     "skip" => $column->getAutoincrement(),
                     "isTimestamp" => get_class($type) == "Doctrine\DBAL\Types\DateTimeType",
                     "isBoolean" => get_class($type) == "Doctrine\DBAL\Types\BooleanType",
+                    "mask" => $mask,
                 ];
                 continue;
             }
@@ -386,6 +390,7 @@ class ScaffoldGenerator extends Command
                 "skip" => $column->getAutoincrement(),
                 "isTimestamp" => get_class($type) == "Doctrine\DBAL\Types\DateTimeType",
                 "isBoolean" => get_class($type) == "Doctrine\DBAL\Types\BooleanType",
+                "mask" => $mask,
             ];
         }
 
@@ -447,7 +452,7 @@ class ScaffoldGenerator extends Command
             } else if ( $columnToBuild["isBoolean"] ) {
                 $content .= "\t\t\t\t\t\t{{ \$item->" . Str::singular($columnToBuild["name"]) . " ? \"SIM\" : \"NÃO\" }}\n";
             } else if ( $columnToBuild["isForeign"] ) {
-                $content .= "\t\t\t\t\t\t{{ \$item->" . Str::singular($columnToBuild["name"]) . "->name }}\n";
+                $content .= "\t\t\t\t\t\t{{ \$item->" . Str::singular($columnToBuild["name"]) . "?->name }}\n";
             } else {
                 $content .= "\t\t\t\t\t\t{{ \$item->" . $columnToBuild["name"] . " }}\n";
             }
@@ -496,14 +501,16 @@ class ScaffoldGenerator extends Command
             $content .= "\t\t\t\t<div class='col-12'>\n";
             $content .= "\t\t\t\t\t<div class='mb-3'>\n";
 
-            if ( in_array($columnToBuild["name"], ['created_at', 'updated_at', 'deleted_at']) ) {$content .= "\t\t\t\t\t\t<label for='" . $columnToBuild["name"] . "' class='form-label'>{{ __('database." . $columnToBuild["name"] . "') }}</label>\n";
+            if ( $columnToBuild["required"] ) {
+                $content .= "\t\t\t\t\t\t<label for='" . $columnToBuild["name"] . "' class='form-label'>{{ __('" . $details->getName() . ".form." . $columnToBuild["name"] . "') }} <b style=\"color: red\">*</b></label>\n";
             } else {
                 $content .= "\t\t\t\t\t\t<label for='" . $columnToBuild["name"] . "' class='form-label'>{{ __('" . $details->getName() . ".form." . $columnToBuild["name"] . "') }}</label>\n";
             }
 
+
             if ( $columnToBuild["isForeign"] ) {
                 $content .= "\t\t\t\t\t\t<select class='form-control' id='" . $columnToBuild["localColumn"] .
-                "' name='" . $columnToBuild["localColumn"] . "'>\n";
+                "' name='" . $columnToBuild["localColumn"] . "' " . ($columnToBuild["required"] ? "required" : "") . ">\n";
                 $content .= "\t\t\t\t\t\t\t<option value=''>-- SELECIONE --</option>\n";
                 $content .= "\t\t\t\t\t\t\t@foreach (\$model->" . $columnToBuild["name"] . " as \$relationshipModel )\n";
                 $content .= "\t\t\t\t\t\t\t\t<option @if (\$relationshipModel->id == \$model->" . $columnToBuild["localColumn"] . ") selected  @endif value='{{ \$relationshipModel->id }}'>{{ \$relationshipModel->name }}</option>\n";
@@ -511,17 +518,18 @@ class ScaffoldGenerator extends Command
                 $content .= "\t\t\t\t\t\t</select>\n";
             } else if ($columnToBuild["isTimestamp"]) {
                 $content .= "\t\t\t\t\t\t<input type=\"date\" class='form-control' id='" . $columnToBuild["name"] .
-                "' name='" . $columnToBuild["name"] . "' value='{{ \$model->" . $columnToBuild["name"] . " }}'>\n";
+                "' name='" . $columnToBuild["name"] . "' value='{{ \$model->" . $columnToBuild["name"] . " }}' " . ($columnToBuild["required"] ? "required" : "") . ">\n";
             } else if ($columnToBuild["isBoolean"]) {
                 $content .= "\t\t\t\t\t\t<div class=\"form-check\">\n";
-                $content .= "\t\t\t\t\t\t\t<input class=\"form-check-input\" value=\"1\" type=\"checkbox\" @if (\$model->" . $columnToBuild["name"] . ") checked @endif value=\"\" id=\"" . $columnToBuild["name"] . "\" name=\"" . $columnToBuild["name"] . "\">\n";
-                $content .= "\t\t\t\t\t\t\t<label class=\"form-check-label\" for=\"" . $columnToBuild["name"] . "\">\n";
+                $content .= "\t\t\t\t\t\t\t<input class=\"form-check-input\" value=\"1\" type=\"checkbox\" @if (\$model->" . $columnToBuild["name"] . ") checked @endif value=\"\" id=\"" . $columnToBuild["name"] . "\" name=\"" . $columnToBuild["name"] . "\">\n";                $content .= "\t\t\t\t\t\t\t<label class=\"form-check-label\" for=\"" . $columnToBuild["name"] . "\">\n";
                 $content .= "\t\t\t\t\t\t\t\t{{ __('" . $details->getName() . ".form." . $columnToBuild["name"] . ".checkbox') }}\n";
                 $content .= "\t\t\t\t\t\t\t</label>\n";
                 $content .= "\t\t\t\t\t\t</div>\n";
             } else {
                 $content .= "\t\t\t\t\t\t<input class='form-control' id='" . $columnToBuild["name"] .
-                "' name='" . $columnToBuild["name"] . "' value='{{ \$model->" . $columnToBuild["name"] . " }}'>\n";
+                "' name='" . $columnToBuild["name"] . "' value='{{ \$model->" . $columnToBuild["name"] . " }}' " . ($columnToBuild["required"] ? "required" : "") .
+                ( $columnToBuild["mask"] ? " minlength=\"" . strlen($columnToBuild["mask"]) . "\" " : "") .
+                ">\n";
             }
 
             $content .= "\t\t\t\t\t</div>\n";
@@ -534,6 +542,23 @@ class ScaffoldGenerator extends Command
 
         $content .= "\t\t\t</div>\n";
         $content .= "\t\t</form>\n\n";
+        $content .= "@endsection\n\n";
+
+        $content .= "@section('js-footer')\n";
+        $content .= "<script>\n";
+
+        foreach( $columnsToBuild as $columnToBuild) {
+            if ( !$columnToBuild["mask"] ) {
+                continue;
+            }
+            $content .= "\t\t\tvar element = document.getElementById('" . $columnToBuild["name"] . "');\n";
+            $content .= "\t\t\tvar maskOptions = {\n";
+            $content .= "\t\t\t\tmask: '" . $columnToBuild["mask"] . "'\n";
+            $content .= "\t\t\t};\n";
+            $content .= "\t\t\tvar mask = IMask(element, maskOptions);\n";
+        }
+
+        $content .= "\t\t</script>\n";
         $content .= "@endsection";
 
         fwrite($file, $content);

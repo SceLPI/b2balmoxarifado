@@ -11,8 +11,8 @@
 			<div class='row'>
 				<div class='col-12'>
 					<div class='mb-3'>
-						<label for='types' class='form-label'>{{ __('entities.form.types') }}</label>
-						<select class='form-control' id='type_id' name='type_id'>
+						<label for='types' class='form-label'>{{ __('entities.form.types') }} <b style="color: red">*</b></label>
+						<select class='form-control' id='type_id' name='type_id' required>
 							<option value=''>-- SELECIONE --</option>
 							@foreach ($model->types as $relationshipModel )
 								<option @if ($relationshipModel->id == $model->type_id) selected  @endif value='{{ $relationshipModel->id }}'>{{ $relationshipModel->name }}</option>
@@ -22,8 +22,8 @@
 				</div>
 				<div class='col-12'>
 					<div class='mb-3'>
-						<label for='name' class='form-label'>{{ __('entities.form.name') }}</label>
-						<input class='form-control' id='name' name='name' value='{{ $model->name }}'>
+						<label for='name' class='form-label'>{{ __('entities.form.name') }} <b style="color: red">*</b></label>
+						<input class='form-control' id='name' name='name' value='{{ $model->name }}' required>
 					</div>
 				</div>
 				<div class='col-12'>

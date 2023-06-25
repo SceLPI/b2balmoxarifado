@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('name');
-            $table->string('cnpj')->unique()->nullable();
+            $table->string('cnpj')->unique()->nullable()->comment("{ \"mask\" : \"00.000.000/0000-00\" }");;
 
             $table->timestamps();
         });
