@@ -56,7 +56,7 @@
 						{{ $item->manufacturer?->name }}
 					</td>
 					<td>
-						{{ $item->supplier?->name }}
+						{{ $item->supplier?->fantasy_name }}
 					</td>
 					<td>
 						{{ $item->category?->name }}

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EntityController;
+use App\Http\Controllers\FromToProductController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\OrderController;
@@ -40,6 +41,7 @@ Route::middleware('auth')->prefix('/')->group(function () {
     Route::resource('/users', UserController::class);
     Route::resource('/orders', OrderController::class);
     Route::resource('/suppliers', SupplierController::class);
+    Route::resource('/from_to_products', FromToProductController::class);
     Route::get('/invoices', [ ProductController::class, "invoice"])->name('products.invoice');
     Route::post('/invoices/review', [ ProductController::class, "invoiceUpload"])->name('products.invoice.review');
     Route::post('/invoices', [ ProductController::class, "invoiceFinish"])->name('products.invoice.finish');

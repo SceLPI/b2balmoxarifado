@@ -285,12 +285,12 @@ class ScaffoldGenerator extends Command
                     }
                 }
 
-                $content .= "\tpublic function get" . ucfirst($foreign->getForeignTableName()) . "Attribute()\n";
+                $content .= "\tpublic function get" . ucfirst( $this->snakeToCamelCase( str_replace("_id", "", $foreign->getLocalColumns()[0]))  ) . "sAttribute()\n";
                 $content .= "\t{\n";
                 $content .= "\t\treturn " . $model . "::all(); \n";
                 $content .= "\t}\n";
 
-                $content .= "\tpublic function " . Str::singular($foreign->getForeignTableName()) . "()\n";
+                $content .= "\tpublic function " . Str::singular( $this->snakeToCamelCase(str_replace("_id", "", $foreign->getLocalColumns()[0]))  ) . "()\n";
                 $content .= "\t{\n";
 
                 $content .= "\t\treturn \$this->belongsTo(" .
@@ -452,7 +452,7 @@ class ScaffoldGenerator extends Command
             } else if ( $columnToBuild["isBoolean"] ) {
                 $content .= "\t\t\t\t\t\t{{ \$item->" . Str::singular($columnToBuild["name"]) . " ? \"SIM\" : \"NÃO\" }}\n";
             } else if ( $columnToBuild["isForeign"] ) {
-                $content .= "\t\t\t\t\t\t{{ \$item->" . Str::singular($columnToBuild["name"]) . "?->name }}\n";
+                $content .= "\t\t\t\t\t\t{{ \$item->" . lcfirst($this->snakeToCamelCase( str_replace("_id", "", $columnToBuild["localColumn"]))) . "?->name }}\n";
             } else {
                 $content .= "\t\t\t\t\t\t{{ \$item->" . $columnToBuild["name"] . " }}\n";
             }
@@ -512,7 +512,7 @@ class ScaffoldGenerator extends Command
                 $content .= "\t\t\t\t\t\t<select class='form-control' id='" . $columnToBuild["localColumn"] .
                 "' name='" . $columnToBuild["localColumn"] . "' " . ($columnToBuild["required"] ? "required" : "") . ">\n";
                 $content .= "\t\t\t\t\t\t\t<option value=''>-- SELECIONE --</option>\n";
-                $content .= "\t\t\t\t\t\t\t@foreach (\$model->" . $columnToBuild["name"] . " as \$relationshipModel )\n";
+                $content .= "\t\t\t\t\t\t\t@foreach (\$model->" . lcfirst($this->snakeToCamelCase( str_replace("_id", "", $columnToBuild["localColumn"])) ) . "s as \$relationshipModel )\n";
                 $content .= "\t\t\t\t\t\t\t\t<option @if (\$relationshipModel->id == \$model->" . $columnToBuild["localColumn"] . ") selected  @endif value='{{ \$relationshipModel->id }}'>{{ \$relationshipModel->name }}</option>\n";
                 $content .= "\t\t\t\t\t\t\t@endforeach\n";
                 $content .= "\t\t\t\t\t\t</select>\n";

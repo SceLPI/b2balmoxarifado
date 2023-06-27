@@ -26,7 +26,7 @@
 						<select class='form-control' id='supplier_id' name='supplier_id' required>
 							<option value=''>-- SELECIONE --</option>
 							@foreach ($model->suppliers as $relationshipModel )
-								<option @if ($relationshipModel->id == $model->supplier_id) selected  @endif value='{{ $relationshipModel->id }}'>{{ $relationshipModel->name }}</option>
+								<option @if ($relationshipModel->id == $model->supplier_id) selected  @endif value='{{ $relationshipModel->id }}'>{{ $relationshipModel->fantasy_name }}</option>
 							@endforeach
 						</select>
 					</div>

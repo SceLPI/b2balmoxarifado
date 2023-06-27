@@ -18,6 +18,9 @@ return new class extends Migration
             $table->unsignedBigInteger('secondary_product_id');
 
             $table->timestamps();
+
+            $table->foreign('main_product_id')->references('id')->on('products');
+            $table->foreign('secondary_product_id')->references('id')->on('products');
         });
     }
 

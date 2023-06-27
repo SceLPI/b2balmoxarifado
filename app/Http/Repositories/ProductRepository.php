@@ -2,22 +2,22 @@
 
 namespace App\Http\Repositories;
 use App\Models\Product;
-use App\Traits\Product\ProductRepositoryTrait;
 
 class ProductRepository extends Repository
 {
-
-    use ProductRepositoryTrait;
 
 		public function __construct() {
 			$this->model = new Product;
 		}
 
 		public function saveFromRequest() : Product {
-			if ( request()->get('manufacturer_id') !== null ) {
-				$this->model->manufacturer_id = request()->get('manufacturer_id');
-			} else if ( !isset($this->model->manufacturer_id) ) {
-				abort(400, "manufacturer_id cannot be null.");
+			if ( $manufacturer_id = request()->get('manufacturer_id') ) {
+				$this->model->manufacturer_id = $manufacturer_id;
+			}
+			if ( request()->get('supplier_id') !== null ) {
+				$this->model->supplier_id = request()->get('supplier_id');
+			} else if ( !isset($this->model->supplier_id) ) {
+				abort(400, "supplier_id cannot be null.");
 			}
 			if ( request()->get('category_id') !== null ) {
 				$this->model->category_id = request()->get('category_id');
@@ -41,6 +41,9 @@ class ProductRepository extends Repository
 				$this->model->stock = request()->get('stock');
 			} else if ( !isset($this->model->stock) ) {
 				abort(400, "stock cannot be null.");
+			}
+			if ( $ultimo_valor_compra = request()->get('ultimo_valor_compra') ) {
+				$this->model->ultimo_valor_compra = $ultimo_valor_compra;
 			}
 			if ( $created_at = request()->get('created_at') ) {
 				$this->model->created_at = $created_at;
