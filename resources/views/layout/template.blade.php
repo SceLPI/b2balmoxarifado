@@ -51,7 +51,7 @@
                             </a>
                             <a class="nav-link" href="{{ route('entities.index') }}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-fw fa-building"></i></div>
-                                Estabelecimentos
+                                Unidades de Consumo
                             </a>
                             <a class="nav-link" href="{{ route('warehouses.index') }}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-fw fa-bank"></i></div>
@@ -65,10 +65,10 @@
                             </a>
                             <div class="collapse" id="products" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <a class="nav-link" href="{{ route('manufacturers.index') }}">
+                                    {{-- <a class="nav-link" href="{{ route('manufacturers.index') }}">
                                         <div class="sb-nav-link-icon"><i class="fas fa-fw fa-wrench"></i></div>
                                         Fabricantes
-                                    </a>
+                                    </a> --}}
                                     <a class="nav-link" href="{{ route('suppliers.index') }}">
                                         <div class="sb-nav-link-icon"><i class="fas fa-fw fa-bank"></i></div>
                                         Fornecedores

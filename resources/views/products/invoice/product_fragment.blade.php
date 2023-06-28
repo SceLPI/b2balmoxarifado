@@ -10,6 +10,7 @@
                     <input class='form-control' id='products[{{ $id }}][description]' name='products[{{ $id }}][description]' value='{{ $product->xProd }}'>
                 </div>
 
+                @if (!isset($product->cat_id))
                 <div class="col-md-3">
                     <label for='products[{{ $id }}][category_id]' class='form-label'>Categoria:</label>
                     <div class="input-group mb-3">
@@ -22,18 +23,24 @@
                         <a href="{{ route('categories.create') }}" target="_blank" class="btn btn-outline-secondary" type="button">Nova</a>
                     </div>
                 </div>
+                @else
+                <div class="col-md-3">
+                    <label for='products[{{ $id }}][supplier_id]' class='form-label'>Fornecedor:</label>
+                    {{-- <div class="input-group mb-3"> --}}
+                        <input class='form-control' type="hidden" id='products[{{ $id }}][category_id]' name='products[{{ $id }}][category_id]' value='{{ $product->cat_id }}'>
+                        <input class='form-control' readonly value='{{ $product->cat_name }}'>
+                        {{-- <a href="{{ route('suppliers.create') }}" target="_blank" class="btn btn-outline-secondary" type="button">Novo</a> --}}
+                    {{-- </div> --}}
+                </div>
+                @endif
 
                 <div class="col-md-3">
                     <label for='products[{{ $id }}][supplier_id]' class='form-label'>Fornecedor:</label>
-                    <div class="input-group mb-3">
-                        <select class='form-control' id='products[{{ $id }}][supplier_id]' name='products[{{ $id }}][supplier_id]'>
-                            <option value=''>-- SELECIONE --</option>
-                            @foreach( $suppliers as $supplier)
-                            <option value="{{ $supplier->id }}">{{ $supplier->fantasy_name }} ({{ $supplier->cnpj }})</option>
-                            @endforeach
-                        </select>
-                        <a href="{{ route('suppliers.create') }}" target="_blank" class="btn btn-outline-secondary" type="button">Novo</a>
-                    </div>
+                    {{-- <div class="input-group mb-3"> --}}
+                        <input class='form-control' type="hidden" id='products[{{ $id }}][supplier_id]' name='products[{{ $id }}][supplier_id]' value='{{ $supplier->id }}'>
+                        <input class='form-control' readonly value='{{ $supplier->fantasy_name }}'>
+                        {{-- <a href="{{ route('suppliers.create') }}" target="_blank" class="btn btn-outline-secondary" type="button">Novo</a> --}}
+                    {{-- </div> --}}
                 </div>
 
                 <div class="col-md-3">

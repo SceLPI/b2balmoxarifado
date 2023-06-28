@@ -9,6 +9,9 @@
 						#
 					</th>
 					<th>
+						{{ __('warehouses.index.types') }}
+					</th>
+					<th>
 						{{ __('warehouses.index.name') }}
 					</th>
 					<th>
@@ -45,6 +48,9 @@
 				<tr>
 					<td>
 						{{ $item->id }}
+					</td>
+					<td>
+						{{ $item->type?->name }}
 					</td>
 					<td>
 						{{ $item->name }}

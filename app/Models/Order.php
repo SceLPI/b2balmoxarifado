@@ -15,11 +15,11 @@ class Order extends Model
 		"created_at" => "datetime",
 		"updated_at" => "datetime",
 	];
-	public function getEntitiesAttribute()
+	public function getEntitysAttribute()
 	{
 		return Entity::all(); 
 	}
-	public function entity()
+	public function Entity()
 	{
 		return $this->belongsTo(Entity::class, "entity_id", "id"); 
 	}

@@ -22,3 +22,8 @@
 		</form>
 
 @endsection
+
+@section('js-footer')
+<script>
+		</script>
+@endsection

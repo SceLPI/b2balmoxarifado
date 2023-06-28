@@ -45,7 +45,6 @@
 					</td>
 					<td>
 						<a href="{{ route('manufacturers.show', ["$item->id"]) }}" class="btn btn-warning">EDITAR</a>
-						<a href="{{ route('manufacturers.destroy', ["$item->id"]) }}" class="btn btn-danger">EXCLUIR</a>
 					</td>
 				</tr>
 				@endforeach

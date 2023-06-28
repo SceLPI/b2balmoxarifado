@@ -11,7 +11,7 @@ return [
     'title' => 'Título',
     'description' => 'Descrição',
     'code' => 'Código',
-    'entities' => 'Estabelecimento',
+    'entities' => 'Unidade de Consumo',
     'ordered_by' => 'Solicitante',
     'finished' => 'Finalizado',
     'email' => 'E-Mail',

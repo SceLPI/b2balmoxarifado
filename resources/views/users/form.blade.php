@@ -11,33 +11,22 @@
 			<div class='row'>
 				<div class='col-12'>
 					<div class='mb-3'>
-						<label for='name' class='form-label'>name</label>
-						<input class='form-control' id='name' name='name' value='{{ $model->name }}'>
+						<label for='name' class='form-label'>{{ __('users.form.name') }} <b style="color: red">*</b></label>
+						<input class='form-control' id='name' name='name' value='{{ $model->name }}' required>
 					</div>
 				</div>
 				<div class='col-12'>
 					<div class='mb-3'>
-						<label for='email' class='form-label'>email</label>
-						<input class='form-control' id='email' name='email' value='{{ $model->email }}'>
+						<label for='email' class='form-label'>{{ __('users.form.email') }} <b style="color: red">*</b></label>
+						<input class='form-control' id='email' name='email' value='{{ $model->email }}' required>
 					</div>
 				</div>
 				<div class='col-12'>
 					<div class='mb-3'>
-						<label for='email_verified_at' class='form-label'>email_verified_at</label>
-						<input type="date" class='form-control' id='email_verified_at' name='email_verified_at' value='{{ $model->email_verified_at }}'>
-					</div>
-				</div>
-				<div class='col-12'>
-					<div class='mb-3'>
-						<label for='password' class='form-label'>password</label>
-						<input class='form-control' id='password' name='password' value='{{ $model->password }}'>
-					</div>
-				</div>
-				<div class='col-12'>
-					<div class='mb-3'>
-						<label for='remember_token' class='form-label'>remember_token</label>
-						<input class='form-control' id='remember_token' name='remember_token' value='{{ $model->remember_token }}'>
-					</div>
+						<label for='password' class='form-label'>{{ __('users.form.password') }}@if (!$model->id) <b style="color: red">*</b>@endif</label>
+						<input class='form-control' id='password' name='password' value='' >
+@if ($model->id)						<small style="color: #88F">(Deixe em branco caso não queira alterar)</small>
+@endif					</div>
 				</div>
 				<div class='col-12'>
 					<button class='btn btn-success'>Salvar</button>
@@ -45,4 +34,9 @@
 			</div>
 		</form>
 
+@endsection
+
+@section('js-footer')
+<script>
+		</script>
 @endsection

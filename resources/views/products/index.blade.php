@@ -9,9 +9,6 @@
 						#
 					</th>
 					<th>
-						{{ __('products.index.manufacturers') }}
-					</th>
-					<th>
 						{{ __('products.index.suppliers') }}
 					</th>
 					<th>
@@ -53,9 +50,6 @@
 						{{ $item->id }}
 					</td>
 					<td>
-						{{ $item->manufacturer?->name }}
-					</td>
-					<td>
 						{{ $item->supplier?->fantasy_name }}
 					</td>
 					<td>
@@ -87,7 +81,6 @@
 					</td>
 					<td>
 						<a href="{{ route('products.show', ["$item->id"]) }}" class="btn btn-warning">EDITAR</a>
-						<a href="{{ route('products.destroy', ["$item->id"]) }}" class="btn btn-danger">EXCLUIR</a>
 					</td>
 				</tr>
 				@endforeach

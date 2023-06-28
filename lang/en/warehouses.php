@@ -9,6 +9,7 @@ return [
     'index.completion' => 'Comp.',
     'index.city' => 'Cidade',
     'index.state' => 'Estado',
+    'index.types' => 'Secretaria',
 
     'form.name' => 'Nome',
     'form.address' => 'Endereço',
@@ -17,5 +18,6 @@ return [
     'form.completion' => 'Comp.',
     'form.city' => 'Cidade',
     'form.state' => 'Estado',
+    'form.types' => 'Selecione uma Secretaria',
 
 ];

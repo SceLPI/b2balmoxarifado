@@ -11,17 +11,6 @@
 			<div class='row'>
 				<div class='col-12'>
 					<div class='mb-3'>
-						<label for='manufacturers' class='form-label'>{{ __('products.form.manufacturers') }}</label>
-						<select class='form-control' id='manufacturer_id' name='manufacturer_id' >
-							<option value=''>-- SELECIONE --</option>
-							@foreach ($model->manufacturers as $relationshipModel )
-								<option @if ($relationshipModel->id == $model->manufacturer_id) selected  @endif value='{{ $relationshipModel->id }}'>{{ $relationshipModel->name }}</option>
-							@endforeach
-						</select>
-					</div>
-				</div>
-				<div class='col-12'>
-					<div class='mb-3'>
 						<label for='suppliers' class='form-label'>{{ __('products.form.suppliers') }} <b style="color: red">*</b></label>
 						<select class='form-control' id='supplier_id' name='supplier_id' required>
 							<option value=''>-- SELECIONE --</option>
@@ -36,7 +25,7 @@
 						<label for='categories' class='form-label'>{{ __('products.form.categories') }} <b style="color: red">*</b></label>
 						<select class='form-control' id='category_id' name='category_id' required>
 							<option value=''>-- SELECIONE --</option>
-							@foreach ($model->categories as $relationshipModel )
+							@foreach ($model->categorys as $relationshipModel )
 								<option @if ($relationshipModel->id == $model->category_id) selected  @endif value='{{ $relationshipModel->id }}'>{{ $relationshipModel->name }}</option>
 							@endforeach
 						</select>

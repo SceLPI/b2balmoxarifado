@@ -3,19 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Repositories\ProductRepository;
-use App\Traits\Product\ProductTrait;
 
 class ProductController extends Controller
 {
 
-    use ProductTrait;
+	use \App\Traits\Product\ProductTrait;
 
 	public function __construct() {
 		$this->repository = new ProductRepository();
 	}
 
 	public function index() {
-		$products = parent::index();
+		$products = parent::index(); 
 
 		return view('products.index')->with('model', $products );
 	}

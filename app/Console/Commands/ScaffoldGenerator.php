@@ -20,6 +20,7 @@ class ScaffoldGenerator extends Command
                                 {--controllername= : Name of Controller }
                                 {--overwritecontroller= : Overwrite Controller }
                                 {--overwriterepository= : Overwrite Repository }
+                                {--hidedelete= : Hide delete buttons }
                             ';
 
     /**
@@ -50,6 +51,7 @@ class ScaffoldGenerator extends Command
         $repositoryFolder = base_path() . DIRECTORY_SEPARATOR ."app" . DIRECTORY_SEPARATOR ."Http" .
                                 DIRECTORY_SEPARATOR . "Repositories";
         $repositoryPath = $repositoryFolder . DIRECTORY_SEPARATOR . $repositoryName . ".php";
+        $traitPath = base_path() . DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "Traits" . DIRECTORY_SEPARATOR . $baseName . DIRECTORY_SEPARATOR;
 
         if ( !file_exists($repositoryFolder) ) {
             mkdir( $repositoryFolder );
@@ -64,6 +66,9 @@ class ScaffoldGenerator extends Command
             $content .= "use App\Models\\" . $baseName . ";\n\n";
             $content .= "class " . $repositoryName . " extends Repository\n";
             $content .= "{\n\n";
+            if ( file_exists( $traitPath . $baseName . "RepositoryTrait.php" ) ) {
+                $content .= "\t\tuse \App\Traits\\" . $baseName . "\\" . $baseName . "RepositoryTrait;\n\n";
+            }
             $content .= "\t\tpublic function __construct() {\n";
             $content .= "\t\t\t\$this->model = new " . $baseName . ";\n";
             $content .= "\t\t}\n\n";
@@ -126,6 +131,7 @@ class ScaffoldGenerator extends Command
                                     DIRECTORY_SEPARATOR . "Api" . DIRECTORY_SEPARATOR;
 
         $controllerPath = $controllerFolder . $controllerName . ".php";
+        $traitPath = base_path() . DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "Traits" . DIRECTORY_SEPARATOR . $baseName . DIRECTORY_SEPARATOR;
 
         if ( !file_exists( $controllerPath ) || $this->option('overwritecontroller') == true ) {
 
@@ -141,6 +147,11 @@ class ScaffoldGenerator extends Command
             $content .= "use App\Http\Repositories\\" . $baseName . "Repository;\n\n";
             $content .= "class " . $controllerName . " extends Controller\n";
             $content .= "{\n\n";
+
+            if ( file_exists( $traitPath . $baseName . "Trait.php" ) ) {
+                $content .= "\tuse \App\Traits\\" . $baseName . "\\" . $baseName . "Trait;\n\n";
+            }
+
             $content .= "\t\tpublic function __construct() {\n";
             $content .= "\t\t\t\$this->repository = new " . $baseName . "Repository();\n";
             $content .= "\t\t}\n\n";
@@ -181,6 +192,7 @@ class ScaffoldGenerator extends Command
                                     DIRECTORY_SEPARATOR;
 
         $controllerPath = $controllerFolder . $controllerName . ".php";
+        $traitPath = base_path() . DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "Traits" . DIRECTORY_SEPARATOR . $baseName . DIRECTORY_SEPARATOR;
 
         if ( !file_exists( $controllerPath ) || $this->option('overwritecontroller') == true ) {
             $file = fopen(  $controllerPath, "w+" );
@@ -191,6 +203,9 @@ class ScaffoldGenerator extends Command
             $content .= "class " . $controllerName . " extends Controller\n";
             $content .= "{\n\n";
 
+            if ( file_exists( $traitPath . $baseName . "Trait.php" ) ) {
+                $content .= "\tuse \App\Traits\\" . $baseName . "\\" . $baseName . "Trait;\n\n";
+            }
 
             $content .= "\tpublic function __construct() {\n";
             $content .= "\t\t\$this->repository = new " . $baseName . "Repository();\n";
@@ -367,7 +382,33 @@ class ScaffoldGenerator extends Command
         foreach( $columns as $name => $column ) {
             $type = $column->getType();
             $comment = json_decode($column->getComment());
-            $mask = $comment?->mask;
+            if ( $comment && $column->getName() == "password" ) {
+                // dd( $comment );
+            }
+            $mask = null;
+            if ( isset($comment->mask) ) {
+                $mask = $comment->mask;
+            }
+            $hidden = null;
+            if ( isset($comment->hidden) ) {
+                $hidden = $comment->hidden;
+            }
+            $encrypted = null;
+            if ( isset($comment->encrypted) ) {
+                $encrypted = $comment->encrypted;
+            }
+            $formHidden = null;
+            if ( isset($comment->{"form.hidden"}) ) {
+                $formHidden = $comment->{"form.hidden"};
+            }
+            $indexHidden = null;
+            if ( isset($comment->{"index.hidden"}) ) {
+                $indexHidden = $comment->{"index.hidden"};
+            }
+            $referenceColumn = null;
+            if ( isset($comment->column) ) {
+                $referenceColumn = $comment->column;
+            }
 
             if ( in_array($name, array_keys($skipForeigns) ) ) {
                 $columnsToBuild[] = [
@@ -379,6 +420,11 @@ class ScaffoldGenerator extends Command
                     "isTimestamp" => get_class($type) == "Doctrine\DBAL\Types\DateTimeType",
                     "isBoolean" => get_class($type) == "Doctrine\DBAL\Types\BooleanType",
                     "mask" => $mask,
+                    "hidden" => $hidden,
+                    "form.hidden" => $formHidden,
+                    "index.hidden" => $indexHidden,
+                    "encrypted" => $encrypted,
+                    "referenceColumn" => $referenceColumn,
                 ];
                 continue;
             }
@@ -391,6 +437,10 @@ class ScaffoldGenerator extends Command
                 "isTimestamp" => get_class($type) == "Doctrine\DBAL\Types\DateTimeType",
                 "isBoolean" => get_class($type) == "Doctrine\DBAL\Types\BooleanType",
                 "mask" => $mask,
+                "hidden" => $hidden,
+                "form.hidden" => $formHidden,
+                "index.hidden" => $indexHidden,
+                "encrypted" => $encrypted,
             ];
         }
 
@@ -417,7 +467,7 @@ class ScaffoldGenerator extends Command
         $content .= "\t\t\t\t\t</th>\n";
 
         foreach( $columnsToBuild as $columnToBuild) {
-            if ( $columnToBuild["skip"]) {
+            if ( $columnToBuild["skip"] || $columnToBuild["hidden"] == "true" || $columnToBuild["index.hidden"] == "true") {
                 continue;
             }
             $content .= "\t\t\t\t\t<th>\n";
@@ -443,7 +493,7 @@ class ScaffoldGenerator extends Command
         $content .= "\t\t\t\t\t</td>\n";
 
         foreach( $columnsToBuild as $columnToBuild) {
-            if ( $columnToBuild["skip"]) {
+            if ( $columnToBuild["skip"] || $columnToBuild["hidden"] == "true" || $columnToBuild["index.hidden"] == "true") {
                 continue;
             }
             $content .= "\t\t\t\t\t<td>\n";
@@ -452,7 +502,7 @@ class ScaffoldGenerator extends Command
             } else if ( $columnToBuild["isBoolean"] ) {
                 $content .= "\t\t\t\t\t\t{{ \$item->" . Str::singular($columnToBuild["name"]) . " ? \"SIM\" : \"NÃO\" }}\n";
             } else if ( $columnToBuild["isForeign"] ) {
-                $content .= "\t\t\t\t\t\t{{ \$item->" . lcfirst($this->snakeToCamelCase( str_replace("_id", "", $columnToBuild["localColumn"]))) . "?->name }}\n";
+                $content .= "\t\t\t\t\t\t{{ \$item->" . lcfirst($this->snakeToCamelCase( str_replace("_id", "", $columnToBuild["localColumn"]))) . "?->" . ($columnToBuild["referenceColumn"] ?: "name") . " }}\n";
             } else {
                 $content .= "\t\t\t\t\t\t{{ \$item->" . $columnToBuild["name"] . " }}\n";
             }
@@ -462,7 +512,9 @@ class ScaffoldGenerator extends Command
 
         $content .= "\t\t\t\t\t<td>\n";
         $content .= "\t\t\t\t\t\t<a href=\"{{ route('" . $details->getName() . ".show', [\"\$item->id\"]) }}\" class=\"btn btn-warning\">EDITAR</a>\n";
-        $content .= "\t\t\t\t\t\t<a href=\"{{ route('" . $details->getName() . ".destroy', [\"\$item->id\"]) }}\" class=\"btn btn-danger\">EXCLUIR</a>\n";
+        if ( $this->option('hidedelete') != "true" ) {
+            $content .= "\t\t\t\t\t\t<a href=\"{{ route('" . $details->getName() . ".destroy', [\"\$item->id\"]) }}\" class=\"btn btn-danger\">EXCLUIR</a>\n";
+        }
         $content .= "\t\t\t\t\t</td>\n";
 
         $content .= "\t\t\t\t</tr>\n";
@@ -494,18 +546,31 @@ class ScaffoldGenerator extends Command
 
         foreach( $columnsToBuild as $columnToBuild) {
 
-            if ( $columnToBuild["skip"] || in_array($columnToBuild["name"], ["created_at", "updated_at", "deleted_at"]) ) {
+            if ( $columnToBuild["skip"] ||
+                    $columnToBuild["hidden"] == "true" ||
+                    $columnToBuild["form.hidden"] == "true" ||
+                    in_array($columnToBuild["name"], ["created_at", "updated_at", "deleted_at"])
+                ) {
                 continue;
             }
 
             $content .= "\t\t\t\t<div class='col-12'>\n";
             $content .= "\t\t\t\t\t<div class='mb-3'>\n";
 
+
+            // ($columnToBuild["encrypted"] == "true" ? "" :  }}")
+
+            $content .= "\t\t\t\t\t\t<label for='" . $columnToBuild["name"] . "' class='form-label'>{{ __('" . $details->getName() . ".form." . $columnToBuild["name"] . "') }}";
             if ( $columnToBuild["required"] ) {
-                $content .= "\t\t\t\t\t\t<label for='" . $columnToBuild["name"] . "' class='form-label'>{{ __('" . $details->getName() . ".form." . $columnToBuild["name"] . "') }} <b style=\"color: red\">*</b></label>\n";
-            } else {
-                $content .= "\t\t\t\t\t\t<label for='" . $columnToBuild["name"] . "' class='form-label'>{{ __('" . $details->getName() . ".form." . $columnToBuild["name"] . "') }}</label>\n";
+                if ( $columnToBuild["encrypted"] == "true" ) {
+                    $content .= "@if (!\$model->id)";
+                }
+                $content .= " <b style=\"color: red\">*</b>";
+                if ( $columnToBuild["encrypted"] == "true" ) {
+                    $content .= "@endif";
+                }
             }
+            $content .= "</label>\n";
 
 
             if ( $columnToBuild["isForeign"] ) {
@@ -513,7 +578,7 @@ class ScaffoldGenerator extends Command
                 "' name='" . $columnToBuild["localColumn"] . "' " . ($columnToBuild["required"] ? "required" : "") . ">\n";
                 $content .= "\t\t\t\t\t\t\t<option value=''>-- SELECIONE --</option>\n";
                 $content .= "\t\t\t\t\t\t\t@foreach (\$model->" . lcfirst($this->snakeToCamelCase( str_replace("_id", "", $columnToBuild["localColumn"])) ) . "s as \$relationshipModel )\n";
-                $content .= "\t\t\t\t\t\t\t\t<option @if (\$relationshipModel->id == \$model->" . $columnToBuild["localColumn"] . ") selected  @endif value='{{ \$relationshipModel->id }}'>{{ \$relationshipModel->name }}</option>\n";
+                $content .= "\t\t\t\t\t\t\t\t<option @if (\$relationshipModel->id == \$model->" . $columnToBuild["localColumn"] . ") selected  @endif value='{{ \$relationshipModel->id }}'>{{ \$relationshipModel->" . ($columnToBuild["referenceColumn"] ?: "name") . " }}</option>\n";
                 $content .= "\t\t\t\t\t\t\t@endforeach\n";
                 $content .= "\t\t\t\t\t\t</select>\n";
             } else if ($columnToBuild["isTimestamp"]) {
@@ -527,13 +592,21 @@ class ScaffoldGenerator extends Command
                 $content .= "\t\t\t\t\t\t</div>\n";
             } else {
                 $content .= "\t\t\t\t\t\t<input class='form-control' id='" . $columnToBuild["name"] .
-                "' name='" . $columnToBuild["name"] . "' value='{{ \$model->" . $columnToBuild["name"] . " }}' " . ($columnToBuild["required"] ? "required" : "") .
+                "' name='" . $columnToBuild["name"] . "' value='" .
+                ($columnToBuild["encrypted"] == "true" ? "" : "{{ \$model->" . $columnToBuild["name"] . " }}") .
+                "' " . ($columnToBuild["required"] && $columnToBuild["encrypted"] != "true" ? "required" : "") .
                 ( $columnToBuild["mask"] ? " minlength=\"" . strlen($columnToBuild["mask"]) . "\" " : "") .
                 ">\n";
             }
 
+            if ( $columnToBuild["encrypted"] == "true" ) {
+                $content .= "@if (\$model->id)";
+                $content .= "\t\t\t\t\t\t<small style=\"color: #88F\">(Deixe em branco caso não queira alterar)</small>\n";
+                $content .= "@endif";
+            }
             $content .= "\t\t\t\t\t</div>\n";
             $content .= "\t\t\t\t</div>\n";
+
         }
 
         $content .= "\t\t\t\t<div class='col-12'>\n";

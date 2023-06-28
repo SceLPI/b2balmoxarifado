@@ -32,7 +32,7 @@
 						{{ $item->id }}
 					</td>
 					<td>
-						{{ $item->type->name }}
+						{{ $item->type?->name }}
 					</td>
 					<td>
 						{{ $item->name }}
@@ -45,7 +45,6 @@
 					</td>
 					<td>
 						<a href="{{ route('entities.show', ["$item->id"]) }}" class="btn btn-warning">EDITAR</a>
-						<a href="{{ route('entities.destroy', ["$item->id"]) }}" class="btn btn-danger">EXCLUIR</a>
 					</td>
 				</tr>
 				@endforeach

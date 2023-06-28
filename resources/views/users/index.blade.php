@@ -9,19 +9,10 @@
 						#
 					</th>
 					<th>
-						{{ __('database.name') }}
+						{{ __('users.index.name') }}
 					</th>
 					<th>
-						{{ __('database.email') }}
-					</th>
-					<th>
-						{{ __('database.email_verified_at') }}
-					</th>
-					<th>
-						{{ __('database.password') }}
-					</th>
-					<th>
-						{{ __('database.remember_token') }}
+						{{ __('users.index.email') }}
 					</th>
 					<th>
 						{{ __('database.created_at') }}
@@ -47,15 +38,6 @@
 						{{ $item->email }}
 					</td>
 					<td>
-						{{ $item->email_verified_at?->format("d/m/Y H:i:s") }}
-					</td>
-					<td>
-						{{ $item->password }}
-					</td>
-					<td>
-						{{ $item->remember_token }}
-					</td>
-					<td>
 						{{ $item->created_at?->format("d/m/Y H:i:s") }}
 					</td>
 					<td>
@@ -63,7 +45,6 @@
 					</td>
 					<td>
 						<a href="{{ route('users.show', ["$item->id"]) }}" class="btn btn-warning">EDITAR</a>
-						<a href="{{ route('users.destroy', ["$item->id"]) }}" class="btn btn-danger">EXCLUIR</a>
 					</td>
 				</tr>
 				@endforeach

@@ -39,7 +39,6 @@
 					</td>
 					<td>
 						<a href="{{ route('categories.show', ["$item->id"]) }}" class="btn btn-warning">EDITAR</a>
-						<a href="{{ route('categories.destroy', ["$item->id"]) }}" class="btn btn-danger">EXCLUIR</a>
 					</td>
 				</tr>
 				@endforeach

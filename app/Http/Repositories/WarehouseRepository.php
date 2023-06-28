@@ -11,6 +11,9 @@ class WarehouseRepository extends Repository
 		}
 
 		public function saveFromRequest() : Warehouse {
+			if ( $type_id = request()->get('type_id') ) {
+				$this->model->type_id = $type_id;
+			}
 			if ( request()->get('name') !== null ) {
 				$this->model->name = request()->get('name');
 			} else if ( !isset($this->model->name) ) {

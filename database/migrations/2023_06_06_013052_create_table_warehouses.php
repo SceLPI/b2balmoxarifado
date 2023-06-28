@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('warehouses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->unsignedBigInteger('type_id')->nullable();
             $table->text('address')->nullable();
             $table->string('number')->nullable();
             $table->string('neighborhood')->nullable();
@@ -21,6 +22,8 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->timestamps();
+
+            $table->foreign('type_id', 'warehouses_fk_types')->references('id')->on('types');
         });
     }
 

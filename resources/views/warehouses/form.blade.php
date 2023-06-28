@@ -11,6 +11,17 @@
 			<div class='row'>
 				<div class='col-12'>
 					<div class='mb-3'>
+						<label for='types' class='form-label'>{{ __('warehouses.form.types') }}</label>
+						<select class='form-control' id='type_id' name='type_id' >
+							<option value=''>-- SELECIONE --</option>
+							@foreach ($model->types as $relationshipModel )
+								<option @if ($relationshipModel->id == $model->type_id) selected  @endif value='{{ $relationshipModel->id }}'>{{ $relationshipModel->name }}</option>
+							@endforeach
+						</select>
+					</div>
+				</div>
+				<div class='col-12'>
+					<div class='mb-3'>
 						<label for='name' class='form-label'>{{ __('warehouses.form.name') }} <b style="color: red">*</b></label>
 						<input class='form-control' id='name' name='name' value='{{ $model->name }}' required>
 					</div>
@@ -57,4 +68,9 @@
 			</div>
 		</form>
 
+@endsection
+
+@section('js-footer')
+<script>
+		</script>
 @endsection

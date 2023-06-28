@@ -6,14 +6,13 @@ use App\Models\Product;
 class ProductRepository extends Repository
 {
 
+		use \App\Traits\Product\ProductRepositoryTrait;
+
 		public function __construct() {
 			$this->model = new Product;
 		}
 
 		public function saveFromRequest() : Product {
-			if ( $manufacturer_id = request()->get('manufacturer_id') ) {
-				$this->model->manufacturer_id = $manufacturer_id;
-			}
 			if ( request()->get('supplier_id') !== null ) {
 				$this->model->supplier_id = request()->get('supplier_id');
 			} else if ( !isset($this->model->supplier_id) ) {

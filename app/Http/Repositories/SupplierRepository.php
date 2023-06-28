@@ -6,6 +6,8 @@ use App\Models\Supplier;
 class SupplierRepository extends Repository
 {
 
+		use \App\Traits\Supplier\SupplierRepositoryTrait;
+
 		public function __construct() {
 			$this->model = new Supplier;
 		}

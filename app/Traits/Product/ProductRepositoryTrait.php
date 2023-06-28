@@ -19,6 +19,7 @@ trait ProductRepositoryTrait {
             $this->model = $productModel;
             $this->model->stock = $stock;
         } else {
+            $this->model = new Product;
             $this->model->stock = $product["amount"];
         }
 
@@ -31,5 +32,9 @@ trait ProductRepositoryTrait {
         $this->model->save();
 
         return $this->model;
+    }
+
+    public function findProductByCodeAndSupplier($supplier, $code) : ?Product {
+        return $this->model->where('supplier_id', $supplier)->where('code', $code)->first();
     }
 }

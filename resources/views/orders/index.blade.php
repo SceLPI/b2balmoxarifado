@@ -35,7 +35,7 @@
 						{{ $item->id }}
 					</td>
 					<td>
-						{{ $item->entity->name }}
+						{{ $item->entity?->name }}
 					</td>
 					<td>
 						{{ $item->ordered_by }}
@@ -51,7 +51,6 @@
 					</td>
 					<td>
 						<a href="{{ route('orders.show', ["$item->id"]) }}" class="btn btn-warning">EDITAR</a>
-						<a href="{{ route('orders.destroy', ["$item->id"]) }}" class="btn btn-danger">EXCLUIR</a>
 					</td>
 				</tr>
 				@endforeach

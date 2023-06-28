@@ -16,27 +16,19 @@ class Product extends Model
 		"updated_at" => "datetime",
 		"deleted_at" => "datetime",
 	];
-	public function getCategoriesAttribute()
+	public function getCategorysAttribute()
 	{
 		return Category::all(); 
 	}
-	public function category()
+	public function Category()
 	{
 		return $this->belongsTo(Category::class, "category_id", "id"); 
-	}
-	public function getManufacturersAttribute()
-	{
-		return Manufacturer::all(); 
-	}
-	public function manufacturer()
-	{
-		return $this->belongsTo(Manufacturer::class, "manufacturer_id", "id"); 
 	}
 	public function getSuppliersAttribute()
 	{
 		return Supplier::all(); 
 	}
-	public function supplier()
+	public function Supplier()
 	{
 		return $this->belongsTo(Supplier::class, "supplier_id", "id"); 
 	}
@@ -44,7 +36,7 @@ class Product extends Model
 	{
 		return Warehouse::all(); 
 	}
-	public function warehouse()
+	public function Warehouse()
 	{
 		return $this->belongsTo(Warehouse::class, "warehouse_id", "id"); 
 	}

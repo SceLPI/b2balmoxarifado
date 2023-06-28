@@ -15,4 +15,12 @@ class Warehouse extends Model
 		"created_at" => "datetime",
 		"updated_at" => "datetime",
 	];
+	public function getTypesAttribute()
+	{
+		return Type::all(); 
+	}
+	public function Type()
+	{
+		return $this->belongsTo(Type::class, "type_id", "id"); 
+	}
 }
