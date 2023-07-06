@@ -66,6 +66,12 @@
 					</td>
 					<td>
 						{{ $item->stock }}
+                        @if ( preg_match("/,/", $item->warehouses_of_product) )
+                            <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="Almoxarifados:<br>@foreach ($item->product_by_warehouse as $prow) <br>-{{ $prow->warehouse->name }} - {{ $prow->stock }} @endforeach">
+                                ℹ︎
+                            </button>
+
+                        @endif
 					</td>
 					<td>
 						R$ {{ number_format($item->ultimo_valor_compra, 2, ",", ".") }}

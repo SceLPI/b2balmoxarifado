@@ -18,23 +18,8 @@ class ProductController extends Controller
 	public function index() {
 		$products = parent::index();
 
-        // SELECT
-        //     `title`,
-        //     `code`,
-        //     SUM(`stock`) as stock,
-        //     MAX(`ultimo_valor_compra`),
-        //     `supplier_id`,
-        //     `category_id`,
-        //     GROUP_CONCAT(`warehouse_id`)
-        // FROM
-        //     products
-        // GROUP BY
-        //     `title`,
-        //     `code`,
-        //     `supplier_id`,
-        //     `category_id`
-
         $products = Product::select([
+                                DB::raw('MIN(id) as id'),
                                 'title',
                                 'code',
                                 'supplier_id',

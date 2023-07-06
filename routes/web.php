@@ -45,6 +45,7 @@ Route::middleware('auth')->prefix('/')->group(function () {
     Route::get('/invoices', [ ProductController::class, "invoice"])->name('products.invoice');
     Route::post('/invoices/review', [ ProductController::class, "invoiceUpload"])->name('products.invoice.review');
     Route::post('/invoices', [ ProductController::class, "invoiceFinish"])->name('products.invoice.finish');
+    Route::get('/fragment', [ OrderController::class, "fragment"])->name('order.fragment');
 });
 
 Auth::routes(['register' => false]);

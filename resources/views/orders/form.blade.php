@@ -37,7 +37,13 @@
 						</div>
 					</div>
 				</div>
+                <div class="col-12 mb-5" id="products_container">
+                    <hr>
+                    <h5>Produtos do pedido</h5>
+                    <button type="button" id="new_product" class="btn btn-info">Escolher Produto</button>
+                </div>
 				<div class='col-12'>
+                    <hr>
 					<button class='btn btn-success'>Salvar</button>
 				</div>
 			</div>
@@ -47,5 +53,15 @@
 
 @section('js-footer')
 <script>
-		</script>
+    $('#new_product').on('click', function () {
+        $.get('{{ route('order.fragment') }}')
+        .done(function (resp) {
+            $('#products_container').append( resp );
+        }).fail(function (resp) {
+            // $('#products_container').append( "falhou carai" );
+        }).always( function (resp) {
+            // alert('aaa');
+        });
+    });
+</script>
 @endsection

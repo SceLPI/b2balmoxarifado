@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Repositories\OrderRepository;
+use App\Models\Product;
 
 class OrderController extends Controller
 {
@@ -12,7 +13,7 @@ class OrderController extends Controller
 	}
 
 	public function index() {
-		$orders = parent::index(); 
+		$orders = parent::index();
 
 		return view('orders.index')->with('model', $orders );
 	}
@@ -38,5 +39,10 @@ class OrderController extends Controller
 
 		return redirect( route('orders.index') )->with('success', 'Atualizado com sucesso!');
 	}
+
+    public function fragment() {
+        $products = Product::where('stock', '>', 0)->get();
+        return view('orders.form_product_fragment')->with('products', $products);
+    }
 
 }

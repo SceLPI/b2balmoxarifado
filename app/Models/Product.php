@@ -52,4 +52,12 @@ class Product extends Model
         $wh = Warehouse::whereIn('id', $warehouses )->get();
         return $wh->pluck('name')->join(', ');
     }
+
+    public function getProductByWarehouseAttribute() {
+        $stocks = Product::where('code', $this->code)
+                    ->where('supplier_id', $this->supplier_id )
+                    ->where('stock', '>', 0)
+                    ->get();
+        return $stocks;
+    }
 }
