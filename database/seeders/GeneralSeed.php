@@ -139,16 +139,55 @@ class GeneralSeed extends Seeder
         DB::table('warehouses')->insert([
             [
                 "name" => "Almoxarifado 1",
+                "type_id" => 2,
                 "created_at" => now(),
                 "updated_at" => now(),
             ],
             [
                 "name" => "Almoxarifado 2",
+                "type_id" => 3,
                 "created_at" => now(),
                 "updated_at" => now(),
             ],
             [
                 "name" => "Almoxarifado 3",
+                "type_id" => 4,
+                "created_at" => now(),
+                "updated_at" => now(),
+            ],
+        ]);
+
+        DB::table('products')->insert([
+            [
+                "supplier_id" => 1,
+                "category_id" => 1,
+                "warehouse_id" => 1,
+                "title" => "Produto 1",
+                "code" => "12345671",
+                "stock" => "10",
+                "ultimo_valor_compra" => "100",
+                "created_at" => now(),
+                "updated_at" => now(),
+            ],
+            [
+                "supplier_id" => 2,
+                "category_id" => 2,
+                "warehouse_id" => 2,
+                "title" => "Produto 2",
+                "code" => "12345672",
+                "stock" => "20",
+                "ultimo_valor_compra" => "200",
+                "created_at" => now(),
+                "updated_at" => now(),
+            ],
+            [
+                "supplier_id" => 3,
+                "category_id" => 3,
+                "warehouse_id" => 3,
+                "title" => "Produto 3",
+                "code" => "12345673",
+                "stock" => "30",
+                "ultimo_valor_compra" => "300",
                 "created_at" => now(),
                 "updated_at" => now(),
             ],

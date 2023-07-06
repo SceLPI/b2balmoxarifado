@@ -69,6 +69,20 @@
                     </div>
                 </div>
 
+                <hr>
+
+                <div class="col-12">
+                    <label for='products[{{ $id }}][from_to]' class='form-label'>De Para:</label>
+                    <div class="input-group mb-3">
+                        <select class='form-control' id='products[{{ $id }}][from_to]' name='products[{{ $id }}][from_to]'>
+                            <option value=''>-- SELECIONE --</option>
+                            @foreach( $fromToProducts as $fromToProduct)
+                            <option value="{{ $fromToProduct->id }}">{{ $fromToProduct->title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

@@ -56,7 +56,7 @@
 						{{ $item->category?->name }}
 					</td>
 					<td>
-						{{ $item->warehouse?->name }}
+						{{ $item->warehouses_of_product }}
 					</td>
 					<td>
 						{{ $item->title }}
@@ -68,7 +68,7 @@
 						{{ $item->stock }}
 					</td>
 					<td>
-						{{ $item->ultimo_valor_compra }}
+						R$ {{ number_format($item->ultimo_valor_compra, 2, ",", ".") }}
 					</td>
 					<td>
 						{{ $item->created_at?->format("d/m/Y H:i:s") }}
@@ -81,6 +81,7 @@
 					</td>
 					<td>
 						<a href="{{ route('products.show', ["$item->id"]) }}" class="btn btn-warning">EDITAR</a>
+						<a href="{{ route('products.destroy', ["$item->id"]) }}" class="btn btn-danger">EXCLUIR</a>
 					</td>
 				</tr>
 				@endforeach

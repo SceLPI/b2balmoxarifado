@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('warehouses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('type_id')->nullable();
+            $table->unsignedBigInteger('type_id');
             $table->text('address')->nullable();
             $table->string('number')->nullable();
             $table->string('neighborhood')->nullable();

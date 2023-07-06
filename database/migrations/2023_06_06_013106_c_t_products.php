@@ -16,10 +16,10 @@ return new class extends Migration
 
             $table->string('title');
             $table->string('code', 40);
-            $table->double('stock')->default(0.0);
+            $table->double('stock')->default(0.0)->comment('{ "form.hidden" : true }');
             $table->double('ultimo_valor_compra')->nullable();
             // $table->unsignedBigInteger('manufacturer_id')->nullable();
-            $table->unsignedBigInteger('supplier_id')->comment('{ "column" : "fantasy_name" }');
+            $table->unsignedBigInteger('supplier_id')->comment('{ "column" : "fantasy_name" }')->nullabe();
             $table->unsignedBigInteger('category_id')->nullabe();
             $table->unsignedBigInteger('warehouse_id')->nullable();
 

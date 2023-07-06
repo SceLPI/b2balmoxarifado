@@ -6,12 +6,17 @@ use App\Http\Repositories\CategoryRepository;
 use App\Http\Repositories\ProductRepository;
 use App\Http\Repositories\SupplierRepository;
 use App\Http\Repositories\WarehouseRepository;
+use App\Models\Product;
 use App\Models\Supplier;
+use App\Models\XmlFile;
 
 trait ProductTrait {
 
     public function invoice() {
-        return view('products.invoice.form');
+        $xmls = XmlFile::get();
+
+        return view('products.invoice.form')
+                    ->with('xmls', $xmls);
     }
 
     public function invoiceUpload() {
@@ -30,6 +35,19 @@ trait ProductTrait {
             $supplier->save();
         }
 
+
+        $xmlFile = XmlFile::where('number', $xmlObject->protNFe->infProt->chNFe)->firstOrNew();
+        if ( !$xmlFile->id ) {
+            $xmlFile->number = $xmlObject->protNFe->infProt->chNFe;
+            $xmlFile->supplier_id = $supplier->id;
+            $xmlFile->value = $xmlObject->NFe->infNFe->pag->detPag->vPag;
+            $xmlFile->is_finished = false;
+            $xmlFile->save();
+        } else if ( $xmlFile->is_finished ) {
+            return back()->with('error', 'Nota Fiscal já Foi cadastrada');
+        }
+
+        $fromToProducts = Product::get();
         $products = [];
         if ( is_array($xmlObject->NFe->infNFe->det) ) {
             foreach( $xmlObject->NFe->infNFe->det as $product ) {
@@ -57,7 +75,9 @@ trait ProductTrait {
                 ->with('products', $products)
                 ->with('warehouses', $warehouses)
                 ->with('categories', $categories)
-                ->with('supplier', $supplier);
+                ->with('supplier', $supplier)
+                ->with('fromToProducts', $fromToProducts);
+
     }
     public function invoiceFinish() {
         $products = request()->get('products');

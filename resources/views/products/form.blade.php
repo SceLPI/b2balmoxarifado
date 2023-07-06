@@ -56,12 +56,6 @@
 				</div>
 				<div class='col-12'>
 					<div class='mb-3'>
-						<label for='stock' class='form-label'>{{ __('products.form.stock') }} <b style="color: red">*</b></label>
-						<input class='form-control' id='stock' name='stock' value='{{ $model->stock }}' required>
-					</div>
-				</div>
-				<div class='col-12'>
-					<div class='mb-3'>
 						<label for='ultimo_valor_compra' class='form-label'>{{ __('products.form.ultimo_valor_compra') }}</label>
 						<input class='form-control' id='ultimo_valor_compra' name='ultimo_valor_compra' value='{{ $model->ultimo_valor_compra }}' >
 					</div>

@@ -13,6 +13,20 @@ trait ProductRepositoryTrait {
                                     ->where('supplier_id', $product["supplier_id"])
                                     ->first();
 
+        if ( $product["from_to"] ) {
+            $productModel = Product::findOrFail( $product["from_to"] );
+            $productByCode = Product::where('warehouse_id', $product["warehouse_id"])
+                                        ->where('code', $productModel->code )
+                                        ->firstOrNew();
+            $productByCode->title = $productModel->title;
+            $productByCode->code = $productModel->code;
+            $productByCode->category_id = $productModel->category_id;
+            $productByCode->warehouse_id = $product["warehouse_id"];
+            $productByCode->supplier_id = $productModel->supplier_id;
+            $productByCode->stock = 0;
+            $productModel = $productByCode;
+        }
+
         if ( $productModel ) {
             $stock = $productModel->stock;
             $stock += $product["amount"];
@@ -21,13 +35,13 @@ trait ProductRepositoryTrait {
         } else {
             $this->model = new Product;
             $this->model->stock = $product["amount"];
+            $this->model->title = $product["description"];
+            $this->model->code = $product["code"];
+            $this->model->category_id = $product["category_id"];
+            $this->model->warehouse_id = $product["warehouse_id"];
+            $this->model->supplier_id = $product["supplier_id"];
         }
 
-        $this->model->title = $product["description"];
-        $this->model->code = $product["code"];
-        $this->model->category_id = $product["category_id"];
-        $this->model->warehouse_id = $product["warehouse_id"];
-        $this->model->supplier_id = $product["supplier_id"];
 
         $this->model->save();
 
