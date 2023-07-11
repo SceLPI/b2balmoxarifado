@@ -65,7 +65,7 @@
                                 R$ {{ number_format($xml->value, 2, ",", ".") }}
                             </td>
                             <td>
-                                {{ $xml->finished }}
+                                {{ $xml->is_finished ? "Sim" : "Não" }}
                             </td>
                         </tr>
                         @endforeach

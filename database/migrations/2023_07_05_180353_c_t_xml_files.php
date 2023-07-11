@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('supplier_id')->comment('{ "column" : "fantasy_name" }')->nullabe();
             $table->float('value');
             $table->boolean('is_finished');
+            $table->longText('body');
 
             $table->timestamps();
 

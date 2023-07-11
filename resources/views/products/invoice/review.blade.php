@@ -2,6 +2,7 @@
 @section('content')
 <form method="post" action="{{ route('products.invoice.finish') }}">
     @csrf
+    <input type="hidden" name="xmlfile" value="{{ $xmlFile->id }}">
     <div class='row'>
         @foreach($products as $id => $product)
         @include('products.invoice.product_fragment')

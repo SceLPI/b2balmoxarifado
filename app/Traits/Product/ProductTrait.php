@@ -9,6 +9,7 @@ use App\Http\Repositories\WarehouseRepository;
 use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\XmlFile;
+use Illuminate\Support\Facades\DB;
 
 trait ProductTrait {
 
@@ -22,6 +23,10 @@ trait ProductTrait {
     public function invoiceUpload() {
         $file = request()->file('xml');
         $xmlObject = json_decode(json_encode(simplexml_load_string( $file->getContent() )));
+        $xmlFile = XmlFile::where('key', $xmlObject->protNFe->infProt->chNFe)->firstOrNew();
+        if ( $xmlFile->id ) {
+            $xmlObject =  json_decode($xmlFile->body);
+        }
 
         //BUSCAR FORNECEDOR, SE NÃO EXISTIR CADASTRA
         // dd( $xmlObject->NFe->infNFe->emit );
@@ -42,13 +47,13 @@ trait ProductTrait {
         }
 
 
-        $xmlFile = XmlFile::where('number', $xmlObject->protNFe->infProt->chNFe)->firstOrNew();
         if ( !$xmlFile->id ) {
             $xmlFile->number = $xmlObject->NFe->infNFe->ide->nNF;
             $xmlFile->key = $xmlObject->protNFe->infProt->chNFe;
             $xmlFile->supplier_id = $supplier->id;
             $xmlFile->value = $xmlObject->NFe->infNFe->pag->detPag->vPag;
             $xmlFile->is_finished = false;
+            $xmlFile->body = json_encode($xmlObject);
             $xmlFile->save();
         } else if ( $xmlFile->is_finished ) {
             return back()->with('error', 'Nota Fiscal já Foi cadastrada');
@@ -79,6 +84,7 @@ trait ProductTrait {
         // $supplier = (new SupplierRepository)->fetchAll();
 
         return view('products.invoice.review')
+                ->with('xmlFile', $xmlFile)
                 ->with('products', $products)
                 ->with('warehouses', $warehouses)
                 ->with('categories', $categories)
@@ -87,12 +93,19 @@ trait ProductTrait {
 
     }
     public function invoiceFinish() {
+
+        DB::beginTransaction();
         $products = request()->get('products');
         // dd( $products );
         foreach( $products as $product) {
             $this->repository->saveProductFromXML($product);
         }
 
+        $xmlFile = XmlFile::find( request()->get("xmlfile"));
+        $xmlFile->is_finished = true;
+        $xmlFile->save();
+
+        DB::commit();
         return redirect( route('products.index') )->with('success', 'Produto Inserido com sucesso.');
     }
 
