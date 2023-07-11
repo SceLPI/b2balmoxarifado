@@ -28,17 +28,24 @@ trait ProductTrait {
         $supplier = (new SupplierRepository)->findMainCnpj( $xmlObject->NFe->infNFe->emit->CNPJ );
         if ( !$supplier ) {
             $supplier = new Supplier;
-            $supplier->fantasy_name = $xmlObject->NFe->infNFe->emit->xFant;
             $supplier->social_reason = $xmlObject->NFe->infNFe->emit->xNome;
+            if ( property_exists($xmlObject->NFe->infNFe->emit, "xFant") ) {
+                $supplier->fantasy_name = $xmlObject->NFe->infNFe->emit->xFant;
+            } else {
+                $supplier->fantasy_name = $supplier->social_reason;
+            }
             $supplier->cnpj = preg_replace("/(..)(...)(...)(....)(..)/", "$1.$2.$3/$4-$5", $xmlObject->NFe->infNFe->emit->CNPJ );
-            $supplier->phone = preg_replace("/^(..)(.?)(....)(....)$/", "($1) $2$3-$4", $xmlObject->NFe->infNFe->emit->enderEmit->fone );
+            if ( property_exists($xmlObject->NFe->infNFe->emit->enderEmit, "fone") ) {
+                $supplier->phone = preg_replace("/^(..)(.?)(....)(....)$/", "($1) $2$3-$4", $xmlObject->NFe->infNFe->emit->enderEmit->fone );
+            }
             $supplier->save();
         }
 
 
         $xmlFile = XmlFile::where('number', $xmlObject->protNFe->infProt->chNFe)->firstOrNew();
         if ( !$xmlFile->id ) {
-            $xmlFile->number = $xmlObject->protNFe->infProt->chNFe;
+            $xmlFile->number = $xmlObject->NFe->infNFe->ide->nNF;
+            $xmlFile->key = $xmlObject->protNFe->infProt->chNFe;
             $xmlFile->supplier_id = $supplier->id;
             $xmlFile->value = $xmlObject->NFe->infNFe->pag->detPag->vPag;
             $xmlFile->is_finished = false;

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('number');
+            $table->string('key');
             $table->unsignedBigInteger('supplier_id')->comment('{ "column" : "fantasy_name" }')->nullabe();
             $table->float('value');
             $table->boolean('is_finished');

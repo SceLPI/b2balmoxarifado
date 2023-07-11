@@ -8,7 +8,7 @@
 				<div class='col-12'>
 					<div class='mb-3'>
 						<label for='xml' class='form-label'>{{ __('products.invoice.form.select') }}</label>
-						<input type="file" class='form-control' id='xml' name='xml' value='' accept="text/xml">
+						<input type="file" class='form-control' id='xml' name='xml' value='' accept="text/xml" required>
 					</div>
 				</div>
 				<div class='col-12'>
@@ -25,6 +25,9 @@
                         <tr>
                             <th>
                                 #
+                            </th>
+                            <th>
+                                {{ __('xml_files.index.key') }}
                             </th>
                             <th>
                                 {{ __('xml_files.index.number') }}
@@ -48,6 +51,9 @@
                         <tr>
                             <td>
                                 {{ $i++ }}
+                            </td>
+                            <td>
+                                {{ $xml->key }}
                             </td>
                             <td>
                                 {{ $xml->number }}
